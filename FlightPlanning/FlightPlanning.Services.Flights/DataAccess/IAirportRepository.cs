@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlightPlanning.Services.Flights.DataAccess
 {
-    public interface IAirportRepositoy
+    public interface IAirportRepository
     {
         IEnumerable<Airport> GetAllAirports();
 

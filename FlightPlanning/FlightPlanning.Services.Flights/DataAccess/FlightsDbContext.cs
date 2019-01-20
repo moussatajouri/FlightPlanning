@@ -16,10 +16,26 @@ namespace FlightPlanning.Services.Flights.DataAccess
         {
         }
 
+        public virtual DbSet<Aircraft> Aircraft { get; set; }
         public virtual DbSet<Airport> Airport { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Aircraft>(entity =>
+            {
+                entity.Property(e => e.FuelCapacity).HasColumnType("decimal(10, 4)");
+
+                entity.Property(e => e.FuelConsumption).HasColumnType("decimal(10, 4)");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.Speed).HasColumnType("decimal(8, 4)");
+
+                entity.Property(e => e.TakeOffEffort).HasColumnType("decimal(10, 4)");
+            });
+
             modelBuilder.Entity<Airport>(entity =>
             {
                 entity.HasIndex(e => e.CountryName)

@@ -8,11 +8,11 @@ using FlightPlanning.Services.Flights.Transverse.Exception;
 
 namespace FlightPlanning.Services.Flights.DataAccess
 {
-    public class AirportRepositoy : IAirportRepositoy
+    public class AirportRepository : IAirportRepository
     {
         private readonly IRepository<Airport> _airportDbContext;
 
-        public AirportRepositoy(IRepository<Airport> airportDbContext)
+        public AirportRepository(IRepository<Airport> airportDbContext)
         {
             _airportDbContext = airportDbContext;
         }
@@ -41,7 +41,9 @@ namespace FlightPlanning.Services.Flights.DataAccess
 
             if (_airportDbContext.Table.Where(a => a.Iata == airport.Iata || a.Icao == airport.Icao || a.Name == airport.Name).Any())
             {
-                throw new FlightPlanningFunctionalException(ExceptionCodes.InvalidAirportCode, ExceptionCodes.InvalidAirportMessage);
+                throw new FlightPlanningFunctionalException(
+                    string.Format(ExceptionCodes.InvalidEntityFormatCode, nameof(airport)),
+                    ExceptionCodes.InvalidAirportMessage);
             }
 
             var insertCount = _airportDbContext.Insert(airport);
@@ -61,7 +63,9 @@ namespace FlightPlanning.Services.Flights.DataAccess
 
             if (_airportDbContext.Table.Where(a => a.Id != airport.Id && (a.Iata == airport.Iata || a.Icao == airport.Icao || a.Name == airport.Name)).Any())
             {
-                throw new FlightPlanningFunctionalException(ExceptionCodes.InvalidAirportCode, ExceptionCodes.InvalidAirportMessage);
+                throw new FlightPlanningFunctionalException(
+                    string.Format(ExceptionCodes.InvalidEntityFormatCode, nameof(airport)),
+                    ExceptionCodes.InvalidAirportMessage);
             }
 
             var updateCount = _airportDbContext.Update(airport);

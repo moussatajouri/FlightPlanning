@@ -11,7 +11,7 @@ using Moq;
 
 namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 {
-    public class AirportRepositoyTests
+    public class AirportRepositoryTests
     {
 
         private void InsertSampleData(DbContextOptions<FlightsDbContext> options)
@@ -40,7 +40,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             using (var context = new FlightsDbContext(options))
             {
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
                 var airports = airportRepositoy.GetAllAirports();
 
                 Assert.NotNull(airports);
@@ -60,7 +60,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             using (var context = new FlightsDbContext(options))
             {
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
                 var airports = airportRepositoy.GetAllAirports();
 
                 Assert.NotNull(airports);
@@ -88,7 +88,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [InlineData(-99)]
         public void Should_GetAirportById_return_Null_When_AirportId_IsNegativeOrZero(int airportId)
         {
-            var airportRepositoy = new AirportRepositoy(null);
+            var airportRepositoy = new AirportRepository(null);
 
             var airport = airportRepositoy.GetAirportById(airportId);
 
@@ -107,7 +107,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             using (var context = new FlightsDbContext(options))
             {
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
 
                 var airport = airportRepositoy.GetAirportById(5);
 
@@ -129,7 +129,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 var expectedAirportId = context.Airport.Single(a => a.Name == "Name_2").Id;
 
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
 
                 var airport = airportRepositoy.GetAirportById(expectedAirportId);
 
@@ -151,7 +151,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [Fact]
         public void Should_InsertAirport_ThrowsException_When_Airport_IsNull()
         {
-            var airportRepositoy = new AirportRepositoy(null);
+            var airportRepositoy = new AirportRepository(null);
 
             Assert.Throws<ArgumentNullException>(() => airportRepositoy.InsertAirport(null));
         }
@@ -175,7 +175,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             using (var context = new FlightsDbContext(options))
             {
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
 
                 var airport = new Airport
                 {
@@ -186,7 +186,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
                 var exception = Assert.Throws<FlightPlanningFunctionalException>(() => airportRepositoy.InsertAirport(airport));
 
-                Assert.Equal(ExceptionCodes.InvalidAirportCode, exception.Code);
+                Assert.Equal(string.Format(ExceptionCodes.InvalidEntityFormatCode, "airport"), exception.Code);
                 Assert.Equal(ExceptionCodes.InvalidAirportMessage, exception.Message);
                 Assert.Equal(3, context.Airport.Count());
             }
@@ -200,7 +200,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             var expectedException = new Exception("test exception");
             repositoryMock.Setup(m => m.Insert(It.IsAny<Airport>())).Throws(expectedException);
 
-            var airportRepositoy = new AirportRepositoy(repositoryMock.Object);
+            var airportRepositoy = new AirportRepository(repositoryMock.Object);
 
             var resultException = Assert.Throws<Exception>(() => airportRepositoy.InsertAirport(new Airport()));
 
@@ -220,7 +220,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             repositoryMock.Setup(m => m.Insert(It.IsAny<Airport>())).Returns(insertCount);
 
-            var airportRepositoy = new AirportRepositoy(repositoryMock.Object);
+            var airportRepositoy = new AirportRepository(repositoryMock.Object);
 
             var resultException = Assert.Throws<FlightPlanningTechnicalException>(() => airportRepositoy.InsertAirport(new Airport()));
 
@@ -242,7 +242,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             using (var context = new FlightsDbContext(options))
             {
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
 
                 var airport = new Airport
                 {
@@ -281,7 +281,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [Fact]
         public void Should_UpdateAirport_ThrowsException_When_Airport_IsNull()
         {
-            var airportRepositoy = new AirportRepositoy(null);
+            var airportRepositoy = new AirportRepository(null);
 
             Assert.Throws<ArgumentNullException>(() => airportRepositoy.UpdateAirport(null));
         }
@@ -317,7 +317,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             using (var context = new FlightsDbContext(options))
             {
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
 
                 var airport = context.Airport.FirstOrDefault(a => a.Name == "Name_1");
 
@@ -328,7 +328,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
                 var exception = Assert.Throws<FlightPlanningFunctionalException>(() => airportRepositoy.UpdateAirport(airport));
 
-                Assert.Equal(ExceptionCodes.InvalidAirportCode, exception.Code);
+                Assert.Equal(string.Format(ExceptionCodes.InvalidEntityFormatCode, "airport"), exception.Code);
                 Assert.Equal(ExceptionCodes.InvalidAirportMessage, exception.Message);
                 Assert.Equal(3, context.Airport.Count());
             }
@@ -349,7 +349,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             var expectedException = new Exception("test exception");
             repositoryMock.Setup(m => m.Update(It.IsAny<Airport>())).Throws(expectedException);
 
-            var airportRepositoy = new AirportRepositoy(repositoryMock.Object);
+            var airportRepositoy = new AirportRepository(repositoryMock.Object);
 
             var resultException = Assert.Throws<Exception>(() => airportRepositoy.UpdateAirport(new Airport()));
 
@@ -369,7 +369,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             repositoryMock.Setup(m => m.Update(It.IsAny<Airport>())).Returns(updateCount);
 
-            var airportRepositoy = new AirportRepositoy(repositoryMock.Object);
+            var airportRepositoy = new AirportRepository(repositoryMock.Object);
 
             var resultException = Assert.Throws<FlightPlanningTechnicalException>(() => airportRepositoy.UpdateAirport(new Airport()));
 
@@ -405,7 +405,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             using (var context = new FlightsDbContext(options))
             {
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
 
                 airportRepositoy.UpdateAirport(expectedAirport);
             }
@@ -440,7 +440,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             repositoryMock.Setup(m => m.Delete(It.IsAny<Airport>())).Verifiable();
 
-            var airportRepositoy = new AirportRepositoy(repositoryMock.Object);
+            var airportRepositoy = new AirportRepository(repositoryMock.Object);
 
             airportRepositoy.DeleteAirport(airportId);
 
@@ -454,7 +454,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             repositoryMock.Setup(m => m.GetById(It.IsAny<int>())).Returns((Airport)null);
 
-            var airportRepositoy = new AirportRepositoy(repositoryMock.Object);
+            var airportRepositoy = new AirportRepository(repositoryMock.Object);
 
             var airportId = 10;
 
@@ -476,7 +476,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             repositoryMock.Setup(m => m.GetById(It.IsAny<int>())).Returns(new Airport());
             repositoryMock.Setup(m => m.Delete(It.IsAny<Airport>())).Throws(expectedException);
 
-            var airportRepositoy = new AirportRepositoy(repositoryMock.Object);
+            var airportRepositoy = new AirportRepository(repositoryMock.Object);
 
             var resultException = Assert.Throws<Exception>(() => airportRepositoy.DeleteAirport(10));
 
@@ -504,7 +504,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 airportToDeleteId = airport.Id;
                 Assert.NotNull(airport);
                 var efRepository = new EntityFrameworkRepository<Airport>(context);
-                var airportRepositoy = new AirportRepositoy(efRepository);
+                var airportRepositoy = new AirportRepository(efRepository);
 
                 airportRepositoy.DeleteAirport(airportToDeleteId);
             }
@@ -529,7 +529,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             repositoryMock.Setup(m => m.Delete(It.IsAny<Airport>())).Returns(updateCount);
             repositoryMock.Setup(m => m.GetById(It.IsAny<int>())).Returns(new Airport());
 
-            var airportRepositoy = new AirportRepositoy(repositoryMock.Object);
+            var airportRepositoy = new AirportRepository(repositoryMock.Object);
 
             var resultException = Assert.Throws<FlightPlanningTechnicalException>(() => airportRepositoy.DeleteAirport(10));
 

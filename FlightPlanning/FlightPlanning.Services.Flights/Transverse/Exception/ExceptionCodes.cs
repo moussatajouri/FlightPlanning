@@ -9,8 +9,9 @@ namespace FlightPlanning.Services.Flights.Transverse.Exception
     {
         public static readonly string EntityFrameworkRepository = "DataAccess_Exception";
 
-        public static readonly string InvalidAirportCode = "invalid_airport_data";
-        public static readonly string InvalidAirportMessage = "Already exists airport with same Iata, Icao or Name proprieties. They must be unique";
+        public static readonly string InvalidEntityFormatCode = "invalid_{0}_data";
+        public static readonly string InvalidAirportMessage = "Already exists airport with same Iata, Icao or name proprieties. They must be unique";
+        public static readonly string InvalidAircraftMessage = "Already exists aircraft with same name. Aircraft Name must be unique";
 
         public static readonly string NoChangeCode = "invalid_airport_data";
         public static readonly string NoChangeMessage = "No change was persisted";
