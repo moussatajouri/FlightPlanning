@@ -8,18 +8,15 @@ using FlightPlanning.Services.Flights.Transverse.Exception;
 
 namespace FlightPlanning.Services.Flights.DataAccess
 {
-    public class AirportRepository : IAirportRepository
+    public class AirportRepository : EntityFrameworkRepository<Airport>, IAirportRepository
     {
-        private readonly IRepository<Airport> _airportDbContext;
-
-        public AirportRepository(IRepository<Airport> airportDbContext)
+        public AirportRepository(FlightsDbContext dbContext) : base(dbContext)
         {
-            _airportDbContext = airportDbContext;
         }
 
         public IEnumerable<Airport> GetAllAirports()
         {
-            return _airportDbContext.Table.AsEnumerable();
+            return GetAll();
         }
 
         public Airport GetAirportById(int airportId)
@@ -29,7 +26,7 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 return null;
             }
 
-            return _airportDbContext.GetById(airportId);
+            return GetById(airportId);
         }
 
         public void InsertAirport(Airport airport)
@@ -39,18 +36,11 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 throw new ArgumentNullException(nameof(airport));
             }
 
-            if (_airportDbContext.Table.Where(a => a.Iata == airport.Iata || a.Icao == airport.Icao || a.Name == airport.Name).Any())
-            {
-                throw new FlightPlanningFunctionalException(
-                    string.Format(ExceptionCodes.InvalidEntityFormatCode, nameof(airport)),
-                    ExceptionCodes.InvalidAirportMessage);
-            }
-
-            var insertCount = _airportDbContext.Insert(airport);
+            var insertCount = Insert(airport);
 
             if (insertCount <= 0)
             {
-                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.InvalidAirportMessage);
+                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.NoChangeMessage);
             }
         }
 
@@ -61,18 +51,11 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 throw new ArgumentNullException(nameof(airport));
             }
 
-            if (_airportDbContext.Table.Where(a => a.Id != airport.Id && (a.Iata == airport.Iata || a.Icao == airport.Icao || a.Name == airport.Name)).Any())
-            {
-                throw new FlightPlanningFunctionalException(
-                    string.Format(ExceptionCodes.InvalidEntityFormatCode, nameof(airport)),
-                    ExceptionCodes.InvalidAirportMessage);
-            }
-
-            var updateCount = _airportDbContext.Update(airport);
+            var updateCount = Update(airport);
 
             if (updateCount <= 0)
             {
-                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.InvalidAirportMessage);
+                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.NoChangeMessage);
             }
         }
 
@@ -83,19 +66,19 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 return;
             }
 
-            var airportToDelete = _airportDbContext.GetById(airportId);
+            var airportToDelete = GetById(airportId);
 
             if (airportToDelete == null)
             {
                 throw new FlightPlanningFunctionalException(ExceptionCodes.EntityToDeleteNotFoundCode,
-                    string.Format(ExceptionCodes.EntityToDeleteNotFoundCode, nameof(Airport), airportId));
+                    string.Format(ExceptionCodes.EntityToDeleteNotFoundFormatMessage, nameof(Airport), airportId));
             }
 
-            var deleteCount = _airportDbContext.Delete(airportToDelete);
+            var deleteCount = Delete(airportToDelete);
 
             if (deleteCount <= 0)
             {
-                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.InvalidAirportMessage);
+                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.NoChangeMessage);
             }
         }
     }

@@ -31,8 +31,9 @@ namespace FlightPlanning.Services.Flights
 
             services.AddDbContext<FlightsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("FlightsDbContext")));
 
-            services.AddScoped<IRepository<Airport>, EntityFrameworkRepository<Airport>>();
-            services.AddScoped<IRepository<Aircraft>, EntityFrameworkRepository<Aircraft>>();
+            services.AddScoped<IAirportRepository, AirportRepository>();
+            services.AddScoped<IAircraftRepository, AircraftRepository>();
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -18,11 +18,16 @@ namespace FlightPlanning.Services.Flights.DataAccess
 
         public virtual DbSet<Aircraft> Aircraft { get; set; }
         public virtual DbSet<Airport> Airport { get; set; }
+        public virtual DbSet<Flight> Flight { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Aircraft>(entity =>
             {
+                entity.HasIndex(e => e.Name)
+                    .HasName("UK_Aircraft_Name")
+                    .IsUnique();
+
                 entity.Property(e => e.FuelCapacity).HasColumnType("decimal(10, 4)");
 
                 entity.Property(e => e.FuelConsumption).HasColumnType("decimal(10, 4)");
@@ -40,6 +45,18 @@ namespace FlightPlanning.Services.Flights.DataAccess
             {
                 entity.HasIndex(e => e.CountryName)
                     .HasName("AirportCountryNameIndex");
+
+                entity.HasIndex(e => e.Iata)
+                    .HasName("UK_Airport_Iata")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Icao)
+                    .HasName("UK_Airport_Icao")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Name)
+                    .HasName("UK_Airport_Name")
+                    .IsUnique();
 
                 entity.Property(e => e.City)
                     .IsRequired()
@@ -66,6 +83,28 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(200);
+            });
+
+            modelBuilder.Entity<Flight>(entity =>
+            {
+                entity.Property(e => e.CreationDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Aircraft)
+                    .WithMany(p => p.Flight)
+                    .HasForeignKey(d => d.AircraftId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.AirportDeparture)
+                    .WithMany(p => p.FlightAirportDeparture)
+                    .HasForeignKey(d => d.AirportDepartureId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Flight_AirportDeparture_AirportId");
+
+                entity.HasOne(d => d.AirportDestination)
+                    .WithMany(p => p.FlightAirportDestination)
+                    .HasForeignKey(d => d.AirportDestinationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Flight_AirportDestination_AirportId");
             });
         }
     }

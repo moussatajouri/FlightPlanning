@@ -27,20 +27,19 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             return mockSet;
         }
 
-
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
         [InlineData(-99)]
-        public void Should_GetById_Return_Null_When_Negative_Id(int entityId)
+        public void Should_GetById_Return_Null_When_Negative_Id2(int entityId)
         {
-            var userContextMock = new Mock<FlightsDbContext>();
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
 
-            var entity = efReository.GetById(entityId);
+            var entity = efReository.Object.GetById(entityId);
 
             Assert.Null(entity);
-            userContextMock.Verify(b => b.Set<BaseEntity>(), Times.Never);
+            flightsContextMock.Verify(b => b.Set<BaseEntity>(), Times.Never);
         }
 
         [Fact]
@@ -54,30 +53,30 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             }.AsQueryable();
 
             var mockSet = CreateDbSetMock(data);
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
-            var entity = efReository.GetById(5);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
+            var entity = efReository.Object.GetById(5);
 
             Assert.Null(entity);
 
-            userContextMock.Verify(b => b.Set<BaseEntity>(), Times.Once);
+            flightsContextMock.Verify(b => b.Set<BaseEntity>(), Times.Once);
         }
 
         [Fact]
         public void Should_GetById_Return_Null_When_Db_Is_Empty()
         {
             var mockSet = CreateDbSetMock(new List<BaseEntity>());
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
-            var entity = efReository.GetById(2);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
+            var entity = efReository.Object.GetById(2);
 
             Assert.Null(entity);
 
-            userContextMock.Verify(b => b.Set<BaseEntity>(), Times.Once);
+            flightsContextMock.Verify(b => b.Set<BaseEntity>(), Times.Once);
         }
 
         [Fact]
@@ -91,24 +90,24 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             };
 
             var mockSet = CreateDbSetMock(data);
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
-            var entity = efReository.GetById(2);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
+            var entity = efReository.Object.GetById(2);
 
             Assert.NotNull(entity);
             Assert.Equal(2, entity.Id);
 
-            userContextMock.Verify(b => b.Set<BaseEntity>(), Times.Once);
+            flightsContextMock.Verify(b => b.Set<BaseEntity>(), Times.Once);
         }
 
         [Fact]
         public void Should_Insert_Throw_Exception_When_Entity_IsNull()
         {
-            var efReository = new EntityFrameworkRepository<BaseEntity>(null);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(new FlightsDbContext());
 
-            Assert.Throws<ArgumentNullException>(()=> efReository.Insert(null));
+            Assert.Throws<ArgumentNullException>(() => efReository.Object.Insert(null));
         }
 
         [Fact]
@@ -116,16 +115,16 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             var mockSet = new Mock<DbSet<BaseEntity>>();
             mockSet.Setup(m => m.Add(It.IsAny<BaseEntity>())).Verifiable();
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
-            userContextMock.Setup(x => x.SaveChanges()).Verifiable();
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            flightsContextMock.Setup(x => x.SaveChanges()).Verifiable();
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
 
-            efReository.Insert(new BaseEntity());
+            efReository.Object.Insert(new BaseEntity());
 
             mockSet.Verify(m => m.Add(It.IsAny<BaseEntity>()), Times.Once);
-            userContextMock.Verify(x => x.SaveChanges(), Times.Once);
+            flightsContextMock.Verify(x => x.SaveChanges(), Times.Once);
         }
 
         [Fact]
@@ -133,16 +132,16 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             var mockSet = new Mock<DbSet<BaseEntity>>();
             mockSet.Setup(m => m.Add(It.IsAny<BaseEntity>())).Verifiable();
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
 
             var expectedExceptionMessage = "exception insert test";
             var exception = new Exception(expectedExceptionMessage);
-            userContextMock.Setup(x => x.SaveChanges()).Throws(exception);
+            flightsContextMock.Setup(x => x.SaveChanges()).Throws(exception);
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
 
-            var exceptionResult = Assert.Throws<FlightPlanningTechnicalException>(() => efReository.Insert(new BaseEntity()));
+            var exceptionResult = Assert.Throws<FlightPlanningTechnicalException>(() => efReository.Object.Insert(new BaseEntity()));
 
             Assert.NotNull(exceptionResult);
             Assert.Equal(ExceptionCodes.EntityFrameworkRepository, exceptionResult.Code);
@@ -153,9 +152,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [Fact]
         public void Should_Update_Throw_Exception_When_Entity_IsNull()
         {
-            var efReository = new EntityFrameworkRepository<BaseEntity>(null);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(new FlightsDbContext());
 
-            Assert.Throws<ArgumentNullException>(() => efReository.Update(null));
+            Assert.Throws<ArgumentNullException>(() => efReository.Object.Update(null));
         }
 
         [Fact]
@@ -163,15 +162,15 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             var mockSet = new Mock<DbSet<BaseEntity>>();
             mockSet.Setup(m => m.Add(It.IsAny<BaseEntity>())).Verifiable();
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
-            userContextMock.Setup(x => x.SaveChanges()).Verifiable();
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            flightsContextMock.Setup(x => x.SaveChanges()).Verifiable();
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
 
-            efReository.Update(new BaseEntity());
+            efReository.Object.Update(new BaseEntity());
 
-            userContextMock.Verify(x => x.SaveChanges(), Times.Once);
+            flightsContextMock.Verify(x => x.SaveChanges(), Times.Once);
         }
 
         [Fact]
@@ -179,16 +178,16 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             var mockSet = new Mock<DbSet<BaseEntity>>();
             mockSet.Setup(m => m.Add(It.IsAny<BaseEntity>())).Verifiable();
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
 
             var expectedExceptionMessage = "exception update test";
             var exception = new Exception(expectedExceptionMessage);
-            userContextMock.Setup(x => x.SaveChanges()).Throws(exception);
+            flightsContextMock.Setup(x => x.SaveChanges()).Throws(exception);
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
 
-            var exceptionResult = Assert.Throws<FlightPlanningTechnicalException>(() => efReository.Update(new BaseEntity()));
+            var exceptionResult = Assert.Throws<FlightPlanningTechnicalException>(() => efReository.Object.Update(new BaseEntity()));
 
             Assert.NotNull(exceptionResult);
             Assert.Equal(ExceptionCodes.EntityFrameworkRepository, exceptionResult.Code);
@@ -196,13 +195,12 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             Assert.Equal(expectedExceptionMessage, exceptionResult.InnerException.Message);
         }
 
-
         [Fact]
         public void Should_Delete_Throw_Exception_When_Entity_IsNull()
         {
-            var efReository = new EntityFrameworkRepository<BaseEntity>(null);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(new FlightsDbContext());
 
-            Assert.Throws<ArgumentNullException>(() => efReository.Delete(null));
+            Assert.Throws<ArgumentNullException>(() => efReository.Object.Delete(null));
         }
 
         [Fact]
@@ -210,16 +208,16 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             var mockSet = new Mock<DbSet<BaseEntity>>();
             mockSet.Setup(m => m.Add(It.IsAny<BaseEntity>())).Verifiable();
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
-            userContextMock.Setup(x => x.SaveChanges()).Verifiable();
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            flightsContextMock.Setup(x => x.SaveChanges()).Verifiable();
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
 
-            efReository.Delete(new BaseEntity());
+            efReository.Object.Delete(new BaseEntity());
 
             mockSet.Verify(m => m.Remove(It.IsAny<BaseEntity>()), Times.Once);
-            userContextMock.Verify(x => x.SaveChanges(), Times.Once);
+            flightsContextMock.Verify(x => x.SaveChanges(), Times.Once);
         }
 
         [Fact]
@@ -227,16 +225,16 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             var mockSet = new Mock<DbSet<BaseEntity>>();
             mockSet.Setup(m => m.Add(It.IsAny<BaseEntity>())).Verifiable();
-            var userContextMock = new Mock<FlightsDbContext>();
-            userContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            flightsContextMock.Setup(x => x.Set<BaseEntity>()).Returns(mockSet.Object);
 
             var expectedExceptionMessage = "exception delete test";
             var exception = new Exception(expectedExceptionMessage);
-            userContextMock.Setup(x => x.SaveChanges()).Throws(exception);
+            flightsContextMock.Setup(x => x.SaveChanges()).Throws(exception);
 
-            var efReository = new EntityFrameworkRepository<BaseEntity>(userContextMock.Object);
+            var efReository = new Mock<EntityFrameworkRepository<BaseEntity>>(flightsContextMock.Object);
 
-            var exceptionResult = Assert.Throws<FlightPlanningTechnicalException>(() => efReository.Delete(new BaseEntity()));
+            var exceptionResult = Assert.Throws<FlightPlanningTechnicalException>(() => efReository.Object.Delete(new BaseEntity()));
 
             Assert.NotNull(exceptionResult);
             Assert.Equal(ExceptionCodes.EntityFrameworkRepository, exceptionResult.Code);

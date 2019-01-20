@@ -9,77 +9,60 @@ using System.Threading.Tasks;
 
 namespace FlightPlanning.Services.Flights.DataAccess
 {
-    public class EntityFrameworkRepository<T> : IRepository<T> where T : BaseEntity
+    public abstract class EntityFrameworkRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly FlightsDbContext _context;
+        private readonly FlightsDbContext _dbContext;
 
-        private DbSet<T> _entities { get; set; }
-
-        public virtual IQueryable<T> Table => Entities;
-
-        public virtual DbSet<T> Entities
+        public EntityFrameworkRepository(FlightsDbContext dbContext)
         {
-            get
-            {
-                if (_entities == null)
-                    _entities = _context.Set<T>();
-                return _entities;
-            }
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public EntityFrameworkRepository(FlightsDbContext context)
+        public IQueryable<TEntity> GetAll()
         {
-            _context = context;
+            return _dbContext.Set<TEntity>().AsNoTracking();
         }
 
-        public T GetById(int id)
+        public TEntity GetById(int id)
         {
             if (id <= 0)
             {
                 return null;
             }
 
-            return Entities.FirstOrDefault(e => e.Id == id);
+            return _dbContext.Set<TEntity>()
+               .AsNoTracking()
+               .FirstOrDefault(e => e.Id == id);
         }
 
-        public int Insert(T entity)
+        public int Insert(TEntity entity)
         {
-            if (entity == null)
+            return TryDbAction(entity, () =>
             {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            try
-            {
-                Entities.Add(entity);
-
-                return _context.SaveChanges();
-            }
-            catch (Exception exp)
-            {
-                throw new FlightPlanningTechnicalException(ExceptionCodes.EntityFrameworkRepository, exp);
-            }
-        }             
-        
-        public int Update(T entity)
-        {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-                
-            try
-            {
-                Entities.Update(entity);
-                return _context.SaveChanges();
-            }
-            catch (Exception exp)
-            {
-                throw new FlightPlanningTechnicalException(ExceptionCodes.EntityFrameworkRepository, exp);
-            }
+                _dbContext.Set<TEntity>().Add(entity);
+                return _dbContext.SaveChanges();
+            });
         }
 
-        public int Delete(T entity)
+        public int Update(TEntity entity)
+        {
+            return TryDbAction(entity, () =>
+            {
+                _dbContext.Set<TEntity>().Update(entity);
+                return _dbContext.SaveChanges();
+            });
+        }
+
+        public int Delete(TEntity entity)
+        {
+            return TryDbAction(entity, () =>
+            {
+                _dbContext.Set<TEntity>().Remove(entity);
+                return _dbContext.SaveChanges();
+            });
+        }
+
+        internal int TryDbAction(TEntity entity, Func<int> acquire)
         {
             if (entity == null)
             {
@@ -88,9 +71,14 @@ namespace FlightPlanning.Services.Flights.DataAccess
 
             try
             {
-                Entities.Remove(entity);
+                return acquire();
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var errorMessage = $"Exception.Message : { dbUpdateException.Message }" +
+                    dbUpdateException.InnerException ?? $"{Environment.NewLine}InnerException.Message : { dbUpdateException.InnerException.Message }";
 
-                return _context.SaveChanges();
+                throw new FlightPlanningFunctionalException(ExceptionCodes.InvalidEntityCode, errorMessage);
             }
             catch (Exception exp)
             {

@@ -8,8 +8,6 @@ namespace FlightPlanning.Services.Flights.DataAccess
 {
     public interface IRepository<T> where T : BaseEntity
     {
-        IQueryable<T> Table { get; }
-
         T GetById(int id);
         
         int Insert(T entity);
@@ -17,6 +15,5 @@ namespace FlightPlanning.Services.Flights.DataAccess
         int Update(T entity);
 
         int Delete(T entity);
-
     }
 }

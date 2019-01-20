@@ -3,7 +3,6 @@ if exists ( select 1 from sysobjects where id = OBJECT_ID('Airport') and type = 
 drop table Airport
 Go
 
-
 CREATE TABLE [Airport] (
     [Id] INT NOT NULL IDENTITY,
 	[Name] nvarchar(200) NOT NULL,
@@ -14,7 +13,11 @@ CREATE TABLE [Airport] (
 	[Latitude]	Decimal(18,15),
 	[Longitude]	Decimal(18,15)
 
-    CONSTRAINT [PK_Airport] PRIMARY KEY ([Id])
+    CONSTRAINT [PK_Airport] PRIMARY KEY ([Id]),
+    CONSTRAINT [UK_Airport_Name] UNIQUE ([Name]),
+	CONSTRAINT [UK_Airport_Iata] UNIQUE ([IATA]),
+	CONSTRAINT [UK_Airport_Icao] UNIQUE ([Icao])
+
 );
 GO
 
@@ -23,4 +26,4 @@ IF NOT EXISTS(SELECT * FROM sys.indexes WHERE name = 'AirportCountryNameIndex' A
     BEGIN
         -- Index with this name, on this table does NOT exist
 		CREATE INDEX AirportCountryNameIndex ON Airport (CountryName);  
-    END
+END

@@ -8,18 +8,15 @@ using FlightPlanning.Services.Flights.Transverse.Exception;
 
 namespace FlightPlanning.Services.Flights.DataAccess
 {
-    public class AircraftRepository : IAircraftRepository
+    public class AircraftRepository : EntityFrameworkRepository<Aircraft>, IAircraftRepository
     {
-        private readonly IRepository<Aircraft> _aircraftDbContext;
-
-        public AircraftRepository(IRepository<Aircraft> aircraftDbContext)
+        public AircraftRepository(FlightsDbContext dbContext) : base(dbContext)
         {
-            _aircraftDbContext = aircraftDbContext;
         }
 
         public IEnumerable<Aircraft> GetAllAircrafts()
         {
-            return _aircraftDbContext.Table.AsEnumerable();
+            return GetAll();
         }
 
         public Aircraft GetAircraftById(int aircraftId)
@@ -29,7 +26,7 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 return null;
             }
 
-            return _aircraftDbContext.GetById(aircraftId);
+            return GetById(aircraftId);
         }
 
         public void InsertAircraft(Aircraft aircraft)
@@ -39,18 +36,11 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 throw new ArgumentNullException(nameof(aircraft));
             }
 
-            if (_aircraftDbContext.Table.Where(a => a.Name == aircraft.Name).Any())
-            {
-                throw new FlightPlanningFunctionalException(
-                    string.Format(ExceptionCodes.InvalidEntityFormatCode, nameof(aircraft)),
-                    ExceptionCodes.InvalidAircraftMessage);
-            }
-
-            var insertCount = _aircraftDbContext.Insert(aircraft);
+            var insertCount = Insert(aircraft);
 
             if (insertCount <= 0)
             {
-                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.InvalidAircraftMessage);
+                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.NoChangeMessage);
             }
         }
 
@@ -61,18 +51,11 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 throw new ArgumentNullException(nameof(aircraft));
             }
 
-            if (_aircraftDbContext.Table.Where(a => a.Id != aircraft.Id && a.Name == aircraft.Name).Any())
-            {
-                throw new FlightPlanningFunctionalException(
-                    string.Format(ExceptionCodes.InvalidEntityFormatCode, nameof(aircraft)),
-                    ExceptionCodes.InvalidAircraftMessage);
-            }
-
-            var updateCount = _aircraftDbContext.Update(aircraft);
+            var updateCount = Update(aircraft);
 
             if (updateCount <= 0)
             {
-                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.InvalidAircraftMessage);
+                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.NoChangeMessage);
             }
         }
 
@@ -83,19 +66,19 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 return;
             }
 
-            var aircraftToDelete = _aircraftDbContext.GetById(aircraftId);
+            var aircraftToDelete = GetById(aircraftId);
 
             if (aircraftToDelete == null)
             {
                 throw new FlightPlanningFunctionalException(ExceptionCodes.EntityToDeleteNotFoundCode,
-                    string.Format(ExceptionCodes.EntityToDeleteNotFoundCode, nameof(Aircraft), aircraftId));
+                    string.Format(ExceptionCodes.EntityToDeleteNotFoundFormatMessage, nameof(Aircraft), aircraftId));
             }
 
-            var deleteCount = _aircraftDbContext.Delete(aircraftToDelete);
+            var deleteCount = Delete(aircraftToDelete);
 
             if (deleteCount <= 0)
             {
-                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.InvalidAircraftMessage);
+                throw new FlightPlanningTechnicalException(ExceptionCodes.NoChangeCode, ExceptionCodes.NoChangeMessage);
             }
         }
     }

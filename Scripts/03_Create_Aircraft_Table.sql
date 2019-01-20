@@ -11,6 +11,7 @@ CREATE TABLE [Aircraft] (
 	[FuelCapacity] Decimal(10,4) NOT NULL,
 	[FuelConsumption] Decimal(10,4) NOT NULL,
 	[TakeOffEffort] Decimal(10,4) NOT NULL
-    CONSTRAINT [PK_Aircraft] PRIMARY KEY ([Id])
+    CONSTRAINT [PK_Aircraft] PRIMARY KEY ([Id]),	
+    CONSTRAINT [UK_Aircraft_Name] UNIQUE ([Name])
 );
 GO

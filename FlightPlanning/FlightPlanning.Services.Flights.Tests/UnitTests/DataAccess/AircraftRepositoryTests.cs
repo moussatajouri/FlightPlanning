@@ -8,6 +8,8 @@ using Xunit;
 using System.Linq;
 using FlightPlanning.Services.Flights.Transverse.Exception;
 using Moq;
+using System.Linq.Expressions;
+using Microsoft.Data.Sqlite;
 
 namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 {
@@ -17,7 +19,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             using (var context = new FlightsDbContext(options))
             {
-                context.Aircraft.Add(new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption= 1, Speed= 800, TakeOffEffort= 0.2m });
+                context.Aircraft.Add(new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2m });
                 context.Aircraft.Add(new Aircraft { Name = "Name_2", FuelCapacity = 1500, FuelConsumption = 0.6m, Speed = 750, TakeOffEffort = 0.3m });
                 context.Aircraft.Add(new Aircraft { Name = "Name_3", FuelCapacity = 1200, FuelConsumption = 0.4m, Speed = 900, TakeOffEffort = 0.4m });
 
@@ -25,6 +27,12 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
                 Assert.Equal(3, insertCount);
             }
+        }
+
+        [Fact]
+        public void Should_AircraftRepository_Throw_Exception_When_InjectedContext_IsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => new AircraftRepository(null));
         }
 
         #region GetAllAircrafts
@@ -38,8 +46,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             using (var context = new FlightsDbContext(options))
             {
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+                var aircraftRepositoy = new AircraftRepository(context);
                 var aircrafts = aircraftRepositoy.GetAllAircrafts();
 
                 Assert.NotNull(aircrafts);
@@ -58,8 +65,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             using (var context = new FlightsDbContext(options))
             {
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+                var aircraftRepositoy = new AircraftRepository(context);
                 var aircrafts = aircraftRepositoy.GetAllAircrafts();
 
                 Assert.NotNull(aircrafts);
@@ -84,7 +90,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [InlineData(-99)]
         public void Should_GetAircraftById_return_Null_When_AircraftId_IsNegativeOrZero(int aircraftId)
         {
-            var aircraftRepositoy = new AircraftRepository(null);
+            var aircraftRepositoy = new AircraftRepository(new FlightsDbContext());
 
             var aircraft = aircraftRepositoy.GetAircraftById(aircraftId);
 
@@ -102,8 +108,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             using (var context = new FlightsDbContext(options))
             {
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+
+                var aircraftRepositoy = new AircraftRepository(context);
 
                 var aircraft = aircraftRepositoy.GetAircraftById(5);
 
@@ -124,8 +130,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             {
                 var expectedAircraftId = context.Aircraft.Single(a => a.Name == "Name_2").Id;
 
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+                var aircraftRepositoy = new AircraftRepository(context);
 
                 var aircraft = aircraftRepositoy.GetAircraftById(expectedAircraftId);
 
@@ -144,9 +149,49 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [Fact]
         public void Should_InsertAircraft_ThrowsException_When_Aircraft_IsNull()
         {
-            var aircraftRepositoy = new AircraftRepository(null);
+            var aircraftRepositoy = new AircraftRepository(new FlightsDbContext());
 
             Assert.Throws<ArgumentNullException>(() => aircraftRepositoy.InsertAircraft(null));
+        }
+
+        
+        [Fact]
+        public void Should_InsertAircraft_ThrowsFunctionalException_When_Name_Missing()
+        {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+
+            try
+            {
+                var options = new DbContextOptionsBuilder<FlightsDbContext>()
+                        .UseSqlite(connection)
+                        .Options;
+
+                using (var context = new FlightsDbContext(options))
+                {
+                    context.Database.EnsureCreated();
+                }
+
+                using (var context = new FlightsDbContext(options))
+                {
+                    var aircraftRepositoy = new AircraftRepository(context);
+
+                    var aircraft = new Aircraft
+                    {
+                        Name = null
+                    };
+
+                    var exception = Assert.Throws<FlightPlanningFunctionalException>(() => aircraftRepositoy.InsertAircraft(aircraft));
+
+                    Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
+                    Assert.Contains($"'NOT NULL constraint failed: Aircraft.Name", exception.Message);
+                    Assert.Empty(context.Aircraft);
+                }
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         [Theory]
@@ -155,46 +200,43 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [InlineData("Name_3")]
         public void Should_InsertAircraft_ThrowsFunctionalException_When_AlreadyNameExist(string name)
         {
-            var options = new DbContextOptionsBuilder<FlightsDbContext>()
-                .UseInMemoryDatabase(databaseName: $"Should_InsertAircraft_ThrowsFunctionalException_When_AlreadyNameExist_n_{name}")
-                .Options;
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
 
-            InsertSampleData(options);
-
-            using (var context = new FlightsDbContext(options))
+            try
             {
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+                var options = new DbContextOptionsBuilder<FlightsDbContext>()
+                    .UseSqlite(connection)
+                    .Options;
 
-                var aircraft = new Aircraft
+                using (var context = new FlightsDbContext(options))
                 {
-                    Name = name,
-                };
+                    context.Database.EnsureCreated();
+                }
 
-                var exception = Assert.Throws<FlightPlanningFunctionalException>(() => aircraftRepositoy.InsertAircraft(aircraft));
+                InsertSampleData(options);
 
-                Assert.Equal(string.Format(ExceptionCodes.InvalidEntityFormatCode, "aircraft"), exception.Code);
-                Assert.Equal(ExceptionCodes.InvalidAircraftMessage, exception.Message);
-                Assert.Equal(3, context.Aircraft.Count());
+                using (var context = new FlightsDbContext(options))
+                {
+
+                    var aircraftRepositoy = new AircraftRepository(context);
+
+                    var aircraft = new Aircraft
+                    {
+                        Name = name,
+                    };
+
+                    var exception = Assert.Throws<FlightPlanningFunctionalException>(() => aircraftRepositoy.InsertAircraft(aircraft));
+
+                    Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
+                    Assert.Contains("UNIQUE constraint failed: Aircraft.Name", exception.Message);
+                    Assert.Equal(3, context.Aircraft.Count());
+                }
             }
-        }
-
-        [Fact]
-        public void Should_InsertAircraft_ThrowsException_When_AircraftRepositoyThrowsException()
-        {
-            var repositoryMock = new Mock<IRepository<Aircraft>>();
-
-            var expectedException = new Exception("test exception");
-            repositoryMock.Setup(m => m.Insert(It.IsAny<Aircraft>())).Throws(expectedException);
-
-            var aircraftRepositoy = new AircraftRepository(repositoryMock.Object);
-
-            var resultException = Assert.Throws<Exception>(() => aircraftRepositoy.InsertAircraft(new Aircraft()));
-
-            Assert.Equal(expectedException.Message, resultException.Message);
-            Assert.Equal(expectedException.StackTrace, resultException.StackTrace);
-
-            repositoryMock.Verify(m => m.Insert(It.IsAny<Aircraft>()), Times.Once);
+            finally
+            {
+                connection.Close();
+            }
         }
 
         [Theory]
@@ -203,18 +245,20 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [InlineData(-4)]
         public void Should_InsertAircraft_ThrowsException_When_AircraftRepositoyReturnNegativeOrZeroValue(int insertCount)
         {
-            var repositoryMock = new Mock<IRepository<Aircraft>>();
+            var flightsContextMock = new Mock<FlightsDbContext>();
+            
+            flightsContextMock.Setup(m => m.Set<Aircraft>().Add(It.IsAny<Aircraft>())).Verifiable();
+            flightsContextMock.Setup(m => m.SaveChanges()).Returns(insertCount);
 
-            repositoryMock.Setup(m => m.Insert(It.IsAny<Aircraft>())).Returns(insertCount);
-
-            var aircraftRepositoy = new AircraftRepository(repositoryMock.Object);
+            var aircraftRepositoy = new AircraftRepository(flightsContextMock.Object);
 
             var resultException = Assert.Throws<FlightPlanningTechnicalException>(() => aircraftRepositoy.InsertAircraft(new Aircraft()));
 
-            Assert.Equal(ExceptionCodes.InvalidAircraftMessage, resultException.Message);
+            Assert.Equal(ExceptionCodes.NoChangeMessage, resultException.Message);
             Assert.Equal(ExceptionCodes.NoChangeCode, resultException.Code);
 
-            repositoryMock.Verify(m => m.Insert(It.IsAny<Aircraft>()), Times.Once);
+            flightsContextMock.Verify(m => m.Set<Aircraft>().Add(It.IsAny<Aircraft>()), Times.Once);
+            flightsContextMock.Verify(m => m.SaveChanges(), Times.Once);
         }
 
         [Fact]
@@ -228,8 +272,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             using (var context = new FlightsDbContext(options))
             {
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+                var aircraftRepositoy = new AircraftRepository(context);
 
                 var aircraft = new Aircraft
                 {
@@ -264,7 +307,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [Fact]
         public void Should_UpdateAircraft_ThrowsException_When_Aircraft_IsNull()
         {
-            var aircraftRepositoy = new AircraftRepository(null);
+            var aircraftRepositoy = new AircraftRepository(new FlightsDbContext());
 
             Assert.Throws<ArgumentNullException>(() => aircraftRepositoy.UpdateAircraft(null));
         }
@@ -274,53 +317,50 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [InlineData("Name_3")]
         public void Should_UpdateAircraft_ThrowsFunctionalException_When_AlreadyNameExist(string name)
         {
-            var options = new DbContextOptionsBuilder<FlightsDbContext>()
-                .UseInMemoryDatabase(databaseName: $"Should_UpdateAircraft_ThrowsFunctionalException_When_AlreadyNameExist_n_{name}")
-                .Options;
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
 
-            InsertSampleData(options);
-
-            int aircraftIdToupdate;
-
-            using (var context = new FlightsDbContext(options))
+            try
             {
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+                var options = new DbContextOptionsBuilder<FlightsDbContext>()
+                        .UseSqlite(connection)
+                        .Options;
 
-                var aircraft = context.Aircraft.FirstOrDefault(a => a.Name == "Name_1");
+                using (var context = new FlightsDbContext(options))
+                {
+                    context.Database.EnsureCreated();
+                }
 
-                aircraftIdToupdate = aircraft.Id;
-                aircraft.Name = name;
+                InsertSampleData(options);
 
-                var exception = Assert.Throws<FlightPlanningFunctionalException>(() => aircraftRepositoy.UpdateAircraft(aircraft));
+                int aircraftIdToupdate;
 
-                Assert.Equal(string.Format(ExceptionCodes.InvalidEntityFormatCode, "aircraft"), exception.Code);
-                Assert.Equal(ExceptionCodes.InvalidAircraftMessage, exception.Message);
-                Assert.Equal(3, context.Aircraft.Count());
+                using (var context = new FlightsDbContext(options))
+                {
+                    var aircraftRepositoy = new AircraftRepository(context);
+
+                    var aircraft = context.Aircraft.FirstOrDefault(a => a.Name == "Name_1");
+
+                    aircraftIdToupdate = aircraft.Id;
+                    aircraft.Name = name;
+
+                    var exception = Assert.Throws<FlightPlanningFunctionalException>(() => aircraftRepositoy.UpdateAircraft(aircraft));
+
+                    Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
+                    Assert.Contains("UNIQUE constraint failed: Aircraft.Name", exception.Message);
+                    Assert.Equal(3, context.Aircraft.Count());
+                }
+
+                using (var context = new FlightsDbContext(options))
+                {
+                    var aircraftAtDb = context.Aircraft.Single(a => a.Id == aircraftIdToupdate);
+                    Assert.Equal("Name_1", aircraftAtDb.Name);
+                }
             }
-            using (var context = new FlightsDbContext(options))
+            finally
             {
-                var aircraftAtDb = context.Aircraft.Single(a => a.Id == aircraftIdToupdate);
-                Assert.Equal("Name_1", aircraftAtDb.Name);
+                connection.Close();
             }
-        }
-
-        [Fact]
-        public void Should_UpdateAircraft_ThrowsException_When_AircraftRepositoyThrowsException()
-        {
-            var repositoryMock = new Mock<IRepository<Aircraft>>();
-
-            var expectedException = new Exception("test exception");
-            repositoryMock.Setup(m => m.Update(It.IsAny<Aircraft>())).Throws(expectedException);
-
-            var aircraftRepositoy = new AircraftRepository(repositoryMock.Object);
-
-            var resultException = Assert.Throws<Exception>(() => aircraftRepositoy.UpdateAircraft(new Aircraft()));
-
-            Assert.Equal(expectedException.Message, resultException.Message);
-            Assert.Equal(expectedException.StackTrace, resultException.StackTrace);
-
-            repositoryMock.Verify(m => m.Update(It.IsAny<Aircraft>()), Times.Once);
         }
 
         [Theory]
@@ -329,18 +369,20 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [InlineData(-4)]
         public void Should_UpdateAircraft_ThrowsException_When_AircraftRepositoyReturnNegativeOrZeroValue(int updateCount)
         {
-            var repositoryMock = new Mock<IRepository<Aircraft>>();
+            var flightsContextMock = new Mock<FlightsDbContext>();
 
-            repositoryMock.Setup(m => m.Update(It.IsAny<Aircraft>())).Returns(updateCount);
+            flightsContextMock.Setup(m => m.Set<Aircraft>().Update(It.IsAny<Aircraft>())).Verifiable();
+            flightsContextMock.Setup(m => m.SaveChanges()).Returns(updateCount);
 
-            var aircraftRepositoy = new AircraftRepository(repositoryMock.Object);
+            var aircraftRepositoy = new AircraftRepository(flightsContextMock.Object);
 
             var resultException = Assert.Throws<FlightPlanningTechnicalException>(() => aircraftRepositoy.UpdateAircraft(new Aircraft()));
 
-            Assert.Equal(ExceptionCodes.InvalidAircraftMessage, resultException.Message);
+            Assert.Equal(ExceptionCodes.NoChangeMessage, resultException.Message);
             Assert.Equal(ExceptionCodes.NoChangeCode, resultException.Code);
 
-            repositoryMock.Verify(m => m.Update(It.IsAny<Aircraft>()), Times.Once);
+            flightsContextMock.Verify(m => m.Set<Aircraft>().Update(It.IsAny<Aircraft>()), Times.Once);
+            flightsContextMock.Verify(m => m.SaveChanges(), Times.Once);
         }
 
         [Fact]
@@ -366,8 +408,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             using (var context = new FlightsDbContext(options))
             {
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+
+                var aircraftRepositoy = new AircraftRepository(context);
 
                 aircraftRepositoy.UpdateAircraft(expectedAircraft);
             }
@@ -396,55 +438,35 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         [InlineData(-33)]
         public void Should_DeleteAircraft_ReturnWithoutCallingRepository_When_AircraftId_IsNegativeOrZero(int aircraftId)
         {
-            var repositoryMock = new Mock<IRepository<Aircraft>>();
+            var flightsContextMock = new Mock<FlightsDbContext>();
 
-            repositoryMock.Setup(m => m.Delete(It.IsAny<Aircraft>())).Verifiable();
+            flightsContextMock.Setup(m => m.Set<Aircraft>().Remove(It.IsAny<Aircraft>())).Verifiable();
 
-            var aircraftRepositoy = new AircraftRepository(repositoryMock.Object);
+            var aircraftRepositoy = new AircraftRepository(flightsContextMock.Object);
 
             aircraftRepositoy.DeleteAircraft(aircraftId);
 
-            repositoryMock.Verify(m => m.Delete(It.IsAny<Aircraft>()), Times.Never);
+            flightsContextMock.Verify(m => m.Set<Aircraft>().Remove(It.IsAny<Aircraft>()), Times.Never);
         }
 
         [Fact]
         public void Should_DeleteAircraft_ThrowsException_When_AircraftIsNotFound()
         {
-            var repositoryMock = new Mock<IRepository<Aircraft>>();
+             var options = new DbContextOptionsBuilder<FlightsDbContext>()
+               .UseInMemoryDatabase(databaseName: "Should_DeleteAircraft_ThrowsException_When_AircraftIsNotFound")
+               .Options;
+            
+            using (var context = new FlightsDbContext(options))
+            {
+                var aircraftRepositoy = new AircraftRepository(context);
 
-            repositoryMock.Setup(m => m.GetById(It.IsAny<int>())).Returns((Aircraft)null);
+                var aircraftId = 10;
 
-            var aircraftRepositoy = new AircraftRepository(repositoryMock.Object);
+                var resultException = Assert.Throws<FlightPlanningFunctionalException>(() => aircraftRepositoy.DeleteAircraft(aircraftId));
 
-            var aircraftId = 10;
-
-            var resultException = Assert.Throws<FlightPlanningFunctionalException>(() => aircraftRepositoy.DeleteAircraft(aircraftId));
-
-            Assert.Equal(string.Format(ExceptionCodes.EntityToDeleteNotFoundCode, "Aircraft", aircraftId), resultException.Message);
-            Assert.Equal(ExceptionCodes.EntityToDeleteNotFoundCode, resultException.Code);
-
-            repositoryMock.Verify(m => m.GetById(It.IsAny<int>()), Times.Once);
-            repositoryMock.Verify(m => m.Delete(It.IsAny<Aircraft>()), Times.Never);
-        }
-
-        [Fact]
-        public void Should_DeleteAircraft_ThrowsException_When_AircraftRepositoyThrowsException()
-        {
-            var repositoryMock = new Mock<IRepository<Aircraft>>();
-
-            var expectedException = new Exception("test exception");
-            repositoryMock.Setup(m => m.GetById(It.IsAny<int>())).Returns(new Aircraft());
-            repositoryMock.Setup(m => m.Delete(It.IsAny<Aircraft>())).Throws(expectedException);
-
-            var aircraftRepositoy = new AircraftRepository(repositoryMock.Object);
-
-            var resultException = Assert.Throws<Exception>(() => aircraftRepositoy.DeleteAircraft(10));
-
-            Assert.Equal(expectedException.Message, resultException.Message);
-            Assert.Equal(expectedException.StackTrace, resultException.StackTrace);
-
-            repositoryMock.Verify(m => m.GetById(It.IsAny<int>()), Times.Once);
-            repositoryMock.Verify(m => m.Delete(It.IsAny<Aircraft>()), Times.Once);
+                Assert.Equal(string.Format(ExceptionCodes.EntityToDeleteNotFoundFormatMessage, "Aircraft", aircraftId), resultException.Message);
+                Assert.Equal(ExceptionCodes.EntityToDeleteNotFoundCode, resultException.Code);
+            }
         }
 
         [Fact]
@@ -461,11 +483,13 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             using (var context = new FlightsDbContext(options))
             {
                 var aircraft = context.Aircraft.FirstOrDefault();
-                aircraftToDeleteId = aircraft.Id;
                 Assert.NotNull(aircraft);
-                var efRepository = new EntityFrameworkRepository<Aircraft>(context);
-                var aircraftRepositoy = new AircraftRepository(efRepository);
+                aircraftToDeleteId = aircraft.Id;                
+            }
 
+            using (var context = new FlightsDbContext(options))
+            {
+                var aircraftRepositoy = new AircraftRepository(context);
                 aircraftRepositoy.DeleteAircraft(aircraftToDeleteId);
             }
 
@@ -476,28 +500,6 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Null(aircraft);
                 Assert.Equal(2, context.Aircraft.Count());
             }
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(-1)]
-        [InlineData(-4)]
-        public void Should_DeleteAircraft_ThrowsException_When_AircraftRepositoyReturnNegativeOrZeroValue(int updateCount)
-        {
-            var repositoryMock = new Mock<IRepository<Aircraft>>();
-
-            repositoryMock.Setup(m => m.Delete(It.IsAny<Aircraft>())).Returns(updateCount);
-            repositoryMock.Setup(m => m.GetById(It.IsAny<int>())).Returns(new Aircraft());
-
-            var aircraftRepositoy = new AircraftRepository(repositoryMock.Object);
-
-            var resultException = Assert.Throws<FlightPlanningTechnicalException>(() => aircraftRepositoy.DeleteAircraft(10));
-
-            Assert.Equal(ExceptionCodes.InvalidAircraftMessage, resultException.Message);
-            Assert.Equal(ExceptionCodes.NoChangeCode, resultException.Code);
-
-            repositoryMock.Verify(m => m.GetById(It.IsAny<int>()), Times.Once);
-            repositoryMock.Verify(m => m.Delete(It.IsAny<Aircraft>()), Times.Once);
         }
 
         #endregion
