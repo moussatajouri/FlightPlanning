@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FlightPlanning.Services.Flights.Transverse.Mapper
 {
-    public static class AirportMapper
+    public class AirportMapper
     {
         public static AirportDto MapToDto(Airport airport)
         {
