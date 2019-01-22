@@ -11,9 +11,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{96952283-9C6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5C6D2A0E-075C-4C02-AFE3-AE40DA3738A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightPlanning.Services.Flights", "FlightPlanning.Services.Flights\FlightPlanning.Services.Flights.csproj", "{260C434D-170F-46D3-815B-B3CCA150C47F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightPlanning.Services.Flights", "FlightPlanning.Services.Flights\FlightPlanning.Services.Flights.csproj", "{260C434D-170F-46D3-815B-B3CCA150C47F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightPlanning.Services.Flights.Tests", "FlightPlanning.Services.Flights.Tests\FlightPlanning.Services.Flights.Tests.csproj", "{773F756A-0364-47CB-969E-47167710ACAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightPlanning.Services.Flights.Tests", "FlightPlanning.Services.Flights.Tests\FlightPlanning.Services.Flights.Tests.csproj", "{773F756A-0364-47CB-969E-47167710ACAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{1B9E2AEC-E054-489F-B4E1-043CEFCB0185}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebMVC", "WebMVC", "{444C2623-E7CB-4992-965E-0CE151E2D074}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7B9A2CAE-D40E-46AD-B0F6-1877115851ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D2CA935A-46E3-4A03-8C35-F1F22BA2E262}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightPlanning.WebMVC", "FlightPlanning.WebMVC\FlightPlanning.WebMVC.csproj", "{295CAF32-DA40-4DD3-9A55-0135981EB2AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +39,10 @@ Global
 		{773F756A-0364-47CB-969E-47167710ACAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{773F756A-0364-47CB-969E-47167710ACAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{773F756A-0364-47CB-969E-47167710ACAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295CAF32-DA40-4DD3-9A55-0135981EB2AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295CAF32-DA40-4DD3-9A55-0135981EB2AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295CAF32-DA40-4DD3-9A55-0135981EB2AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295CAF32-DA40-4DD3-9A55-0135981EB2AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +53,10 @@ Global
 		{5C6D2A0E-075C-4C02-AFE3-AE40DA3738A1} = {1F4176F1-8C74-402E-AB37-25D3376CF94D}
 		{260C434D-170F-46D3-815B-B3CCA150C47F} = {96952283-9C63-44A1-A844-23FEFB27503A}
 		{773F756A-0364-47CB-969E-47167710ACAA} = {5C6D2A0E-075C-4C02-AFE3-AE40DA3738A1}
+		{444C2623-E7CB-4992-965E-0CE151E2D074} = {1B9E2AEC-E054-489F-B4E1-043CEFCB0185}
+		{7B9A2CAE-D40E-46AD-B0F6-1877115851ED} = {444C2623-E7CB-4992-965E-0CE151E2D074}
+		{D2CA935A-46E3-4A03-8C35-F1F22BA2E262} = {444C2623-E7CB-4992-965E-0CE151E2D074}
+		{295CAF32-DA40-4DD3-9A55-0135981EB2AE} = {7B9A2CAE-D40E-46AD-B0F6-1877115851ED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8BCE7122-14EB-4865-88CE-658D30F090C5}
