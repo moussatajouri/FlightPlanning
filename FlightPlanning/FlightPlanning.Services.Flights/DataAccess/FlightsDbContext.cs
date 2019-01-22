@@ -87,7 +87,7 @@ namespace FlightPlanning.Services.Flights.DataAccess
 
             modelBuilder.Entity<Flight>(entity =>
             {
-                entity.Property(e => e.CreationDate).HasColumnType("datetime");
+                entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Aircraft)
                     .WithMany(p => p.Flight)

@@ -8,7 +8,7 @@ namespace FlightPlanning.Services.Flights.Models
         public int AirportDepartureId { get; set; }
         public int AirportDestinationId { get; set; }
         public int AircraftId { get; set; }
-        public DateTime? CreationDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
         public Aircraft Aircraft { get; set; }
         public Airport AirportDeparture { get; set; }

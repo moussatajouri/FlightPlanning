@@ -17,5 +17,8 @@ namespace FlightPlanning.Services.Flights.Transverse.Exception
         public static readonly string EntityToDeleteNotFoundCode = "Entity_To_Delete_Is_Not_Found";
         public static readonly string EntityToDeleteNotFoundFormatMessage = "The {0} entity with identifier {1} is not found";
 
+        public static readonly string SameDepartureAndDestinationAirportCode = "Same_Airport_Departure_And_Airport_Destination";
+        public static readonly string SameDepartureAndDestinationAirportFormatMessage = "The airport of departure and destination must be different. Departure Id={0}. Destination Id={1}";
+
     }
 }

@@ -8,7 +8,7 @@ CREATE TABLE [Flight] (
 	[AirportDepartureId] INT NOT NULL,
 	[AirportDestinationId] INT NOT NULL,
 	[AircraftId] INT NOT NULL,
-	[CreationDate] datetime NULL,
+	[UpdateDate] datetime NULL,
     CONSTRAINT [PK_Flight] PRIMARY KEY ([Id]),
     CONSTRAINT [FK_Flight_AirportDeparture_AirportId] FOREIGN KEY ([AirportDepartureId]) REFERENCES [Airport] ([Id]),
 	CONSTRAINT [FK_Flight_AirportDestination_AirportId] FOREIGN KEY ([AirportDestinationId]) REFERENCES [Airport] ([Id]),
