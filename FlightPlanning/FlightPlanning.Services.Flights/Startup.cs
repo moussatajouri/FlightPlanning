@@ -55,6 +55,7 @@ namespace FlightPlanning.Services.Flights
                 app.UseHsts();
             }
 
+            app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
