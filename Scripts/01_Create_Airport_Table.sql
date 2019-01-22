@@ -10,8 +10,8 @@ CREATE TABLE [Airport] (
 	[CountryName]  nvarchar(100) NOT NULL,
 	[IATA]	varchar(3) NULL,
 	[ICAO]	varchar(4) NULL,
-	[Latitude]	Decimal(18,15),
-	[Longitude]	Decimal(18,15)
+	[Latitude]	float,
+	[Longitude]	float
 
     CONSTRAINT [PK_Airport] PRIMARY KEY ([Id]),
     CONSTRAINT [UK_Airport_Name] UNIQUE ([Name]),

@@ -8,14 +8,18 @@ namespace FlightPlanning.Services.Flights.BusinessLogic
 {
     public interface IFlightService
     {
-        IEnumerable<FlightDto> GetAllFlights();
+        IEnumerable<FlightDto> GetAllFlights();        
 
-        FlightDto GetFlightById(int flightId);
+        FlightDto GetFlightById(int flightId);        
 
         void InsertFlight(FlightDto flight);
 
         void UpdateFlight(FlightDto flight);
 
         void DeleteFlight(int flightId);
+
+        IEnumerable<DetailedFlightDto> GetAllDetailedFlights();
+
+        DetailedFlightDto GetDetailedFlightDtoById(int flightId);
     }
 }

@@ -11,10 +11,10 @@ namespace FlightPlanning.Services.Flights.Models
         }
 
         public string Name { get; set; }
-        public decimal Speed { get; set; }
-        public decimal FuelCapacity { get; set; }
-        public decimal FuelConsumption { get; set; }
-        public decimal TakeOffEffort { get; set; }
+        public double Speed { get; set; }
+        public double FuelCapacity { get; set; }
+        public double FuelConsumption { get; set; }
+        public double TakeOffEffort { get; set; }
 
         public ICollection<Flight> Flight { get; set; }
     }

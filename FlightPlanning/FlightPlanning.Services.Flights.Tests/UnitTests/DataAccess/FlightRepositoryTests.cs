@@ -18,14 +18,14 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             using (var context = new FlightsDbContext(options))
             {
-                var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15m, Longitude = 60.1546m, Name = "Name_1" };
-                var destination_1 = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15m, Longitude = 70.9146m, Name = "Name_2" };
-                var destination_2 = new Airport { City = "city_3", CountryName = "CountryName_3", Iata = "BB3", Icao = "BBB3", Latitude = 22.15m, Longitude = 70.9146m, Name = "Name_3" };
+                var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15, Longitude = 60.1546, Name = "Name_1" };
+                var destination_1 = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15, Longitude = 70.9146, Name = "Name_2" };
+                var destination_2 = new Airport { City = "city_3", CountryName = "CountryName_3", Iata = "BB3", Icao = "BBB3", Latitude = 22.15, Longitude = 70.9146, Name = "Name_3" };
                 context.Airport.Add(departure);
                 context.Airport.Add(destination_1);
                 context.Airport.Add(destination_2);
 
-                var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2m };
+                var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2 };
                 context.Aircraft.Add(aircraft);
 
                 context.Flight.Add(new Flight { UpdateDate = new DateTime(2019, 10, 02, 10, 12, 36), Aircraft = aircraft, AirportDeparture = departure, AirportDestination = destination_1 });
@@ -92,7 +92,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                     Assert.Equal(1000, aircraft.FuelCapacity);
                     Assert.Equal(1, aircraft.FuelConsumption);
                     Assert.Equal(800, aircraft.Speed);
-                    Assert.Equal(0.2m, aircraft.TakeOffEffort);
+                    Assert.Equal(0.2, aircraft.TakeOffEffort);
 
                     var airportDeparture = flight.AirportDeparture;
                     Assert.NotNull(airportDeparture);
@@ -101,8 +101,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                     Assert.Equal("CountryName_1", airportDeparture.CountryName);
                     Assert.Equal("AAA", airportDeparture.Iata);
                     Assert.Equal("AAAA", airportDeparture.Icao);
-                    Assert.Equal(12.15m, airportDeparture.Latitude);
-                    Assert.Equal(60.1546m, airportDeparture.Longitude);
+                    Assert.Equal(12.15, airportDeparture.Latitude);
+                    Assert.Equal(60.1546, airportDeparture.Longitude);
                     Assert.Equal("Name_1", airportDeparture.Name);
 
                     var airportDestination = flight.AirportDestination;
@@ -112,8 +112,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                     Assert.StartsWith("CountryName_", airportDestination.CountryName);
                     Assert.StartsWith("BB", airportDestination.Iata);
                     Assert.StartsWith("BBB", airportDestination.Icao);
-                    Assert.Equal(22.15m, airportDestination.Latitude);
-                    Assert.Equal(70.9146m, airportDestination.Longitude);
+                    Assert.Equal(22.15, airportDestination.Latitude);
+                    Assert.Equal(70.9146, airportDestination.Longitude);
                     Assert.StartsWith("Name_", airportDestination.Name);
                 }
             }
@@ -180,7 +180,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal(1000, aircraft.FuelCapacity);
                 Assert.Equal(1, aircraft.FuelConsumption);
                 Assert.Equal(800, aircraft.Speed);
-                Assert.Equal(0.2m, aircraft.TakeOffEffort);
+                Assert.Equal(0.2, aircraft.TakeOffEffort);
 
                 var airportDeparture = flight.AirportDeparture;
                 Assert.NotNull(airportDeparture);
@@ -189,8 +189,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal("CountryName_1", airportDeparture.CountryName);
                 Assert.Equal("AAA", airportDeparture.Iata);
                 Assert.Equal("AAAA", airportDeparture.Icao);
-                Assert.Equal(12.15m, airportDeparture.Latitude);
-                Assert.Equal(60.1546m, airportDeparture.Longitude);
+                Assert.Equal(12.15, airportDeparture.Latitude);
+                Assert.Equal(60.1546, airportDeparture.Longitude);
                 Assert.Equal("Name_1", airportDeparture.Name);
 
                 var airportDestination = flight.AirportDestination;
@@ -200,8 +200,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal("CountryName_2", airportDestination.CountryName);
                 Assert.Equal("BB2", airportDestination.Iata);
                 Assert.Equal("BBB2", airportDestination.Icao);
-                Assert.Equal(22.15m, airportDestination.Latitude);
-                Assert.Equal(70.9146m, airportDestination.Longitude);
+                Assert.Equal(22.15, airportDestination.Latitude);
+                Assert.Equal(70.9146, airportDestination.Longitude);
                 Assert.Equal("Name_2", airportDestination.Name);
             }
         }
@@ -219,10 +219,10 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         }
 
         [Theory]
-        [InlineData(null, 1, 2, "AircraftId")]
-        [InlineData(1, null, 2, "AirportDepartureId")]
-        [InlineData(1, 1, null, "AirportDestinationId")]
-        public void Should_InsertFlight_ThrowsFunctionalException_When_PrinciplePropertiesMissing(int? aircraftId, int? airportDepartureId, int? airportDestinationId, string propertie)
+        [InlineData(null, 1, 2)]
+        [InlineData(1, null, 2)]
+        [InlineData(1, 1, null)]
+        public void Should_InsertFlight_ThrowsFunctionalException_When_PrinciplePropertiesMissing(int? aircraftId, int? airportDepartureId, int? airportDestinationId)
         {
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
@@ -348,21 +348,21 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                     var expectedInsertCount = 0;
                     if (insertAirportDeparture)
                     {
-                        var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15m, Longitude = 60.1546m, Name = "Name_1" };
+                        var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15, Longitude = 60.1546, Name = "Name_1" };
                         context.Airport.Add(departure);
                         airportDepartureId = departure.Id;
                         expectedInsertCount++;
                     }
                     if (insertAirportDestination)
                     {
-                        var destination = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15m, Longitude = 70.9146m, Name = "Name_2" };
+                        var destination = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15, Longitude = 70.9146, Name = "Name_2" };
                         context.Airport.Add(destination);
                         airportDestinationId = destination.Id;
                         expectedInsertCount++;
                     }
                     if (insertAircraft)
                     {
-                        var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2m };
+                        var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2 };
                         context.Aircraft.Add(aircraft);
                         aircraftId = aircraft.Id;
                         expectedInsertCount++;
@@ -412,12 +412,12 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
             using (var context = new FlightsDbContext(options))
             {
-                var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15m, Longitude = 60.1546m, Name = "Name_1" };
-                var destination = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15m, Longitude = 70.9146m, Name = "Name_2" };
+                var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15, Longitude = 60.1546, Name = "Name_1" };
+                var destination = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15, Longitude = 70.9146, Name = "Name_2" };
                 context.Airport.Add(departure);
                 context.Airport.Add(destination);
 
-                var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2m };
+                var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2 };
                 context.Aircraft.Add(aircraft);
 
                 var insertCount = context.SaveChanges();
@@ -456,7 +456,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal(1000, aircraft.FuelCapacity);
                 Assert.Equal(1, aircraft.FuelConsumption);
                 Assert.Equal(800, aircraft.Speed);
-                Assert.Equal(0.2m, aircraft.TakeOffEffort);
+                Assert.Equal(0.2, aircraft.TakeOffEffort);
 
                 var airportDeparture = flight.AirportDeparture;
                 Assert.NotNull(airportDeparture);
@@ -465,8 +465,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal("CountryName_1", airportDeparture.CountryName);
                 Assert.Equal("AAA", airportDeparture.Iata);
                 Assert.Equal("AAAA", airportDeparture.Icao);
-                Assert.Equal(12.15m, airportDeparture.Latitude);
-                Assert.Equal(60.1546m, airportDeparture.Longitude);
+                Assert.Equal(12.15, airportDeparture.Latitude);
+                Assert.Equal(60.1546, airportDeparture.Longitude);
                 Assert.Equal("Name_1", airportDeparture.Name);
 
                 var airportDestination = flight.AirportDestination;
@@ -476,8 +476,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal("CountryName_2", airportDestination.CountryName);
                 Assert.Equal("BB2", airportDestination.Iata);
                 Assert.Equal("BBB2", airportDestination.Icao);
-                Assert.Equal(22.15m, airportDestination.Latitude);
-                Assert.Equal(70.9146m, airportDestination.Longitude);
+                Assert.Equal(22.15, airportDestination.Latitude);
+                Assert.Equal(70.9146, airportDestination.Longitude);
                 Assert.Equal("Name_2", airportDestination.Name);
             }
         }
@@ -495,10 +495,10 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         }
 
         [Theory]
-        [InlineData(null, 1, 2, "AircraftId")]
-        [InlineData(1, null, 2, "AirportDepartureId")]
-        [InlineData(1, 1, null, "AirportDestinationId")]
-        public void Should_UpdateFlight_ThrowsFunctionalException_When_PrinciplePropertiesMissing(int? aircraftId, int? airportDepartureId, int? airportDestinationId, string propertie)
+        [InlineData(null, 1, 2)]
+        [InlineData(1, null, 2)]
+        [InlineData(1, 1, null)]
+        public void Should_UpdateFlight_ThrowsFunctionalException_When_PrinciplePropertiesMissing(int? aircraftId, int? airportDepartureId, int? airportDestinationId)
         {
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
@@ -624,21 +624,21 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                     var expectedUpdateCount = 0;
                     if (updateAirportDeparture)
                     {
-                        var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15m, Longitude = 60.1546m, Name = "Name_1" };
+                        var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15, Longitude = 60.1546, Name = "Name_1" };
                         context.Airport.Add(departure);
                         airportDepartureId = departure.Id;
                         expectedUpdateCount++;
                     }
                     if (updateAirportDestination)
                     {
-                        var destination = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15m, Longitude = 70.9146m, Name = "Name_2" };
+                        var destination = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15, Longitude = 70.9146, Name = "Name_2" };
                         context.Airport.Add(destination);
                         airportDestinationId = destination.Id;
                         expectedUpdateCount++;
                     }
                     if (updateAircraft)
                     {
-                        var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2m };
+                        var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2 };
                         context.Aircraft.Add(aircraft);
                         aircraftId = aircraft.Id;
                         expectedUpdateCount++;
@@ -698,8 +698,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
                 using (var context = new FlightsDbContext(options))
                 {
-                    var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15m, Longitude = 60.1546m, Name = "Name_1" };
-                    var destination = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15m, Longitude = 70.9146m, Name = "Name_2" };
+                    var departure = new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15, Longitude = 60.1546, Name = "Name_1" };
+                    var destination = new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BB2", Icao = "BBB2", Latitude = 22.15, Longitude = 70.9146, Name = "Name_2" };
 
                     var departure_2 = new Airport { City = "departure_2", CountryName = "departure_2", Iata = "111", Icao = "1111", Name = "departure_2" };
                     var destination_2 = new Airport { City = "destination_2", CountryName = "destination_2", Iata = "222", Icao = "2222", Name = "destination_2" };
@@ -709,10 +709,10 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                     context.Airport.Add(departure_2);
                     context.Airport.Add(destination_2);
 
-                    var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2m };
+                    var aircraft = new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2 };
                     context.Aircraft.Add(aircraft);
 
-                    var aircraft_2 = new Aircraft { Name = "aircraft_2", FuelCapacity = 800, FuelConsumption = 2, Speed = 500, TakeOffEffort = 0.3m };
+                    var aircraft_2 = new Aircraft { Name = "aircraft_2", FuelCapacity = 800, FuelConsumption = 2, Speed = 500, TakeOffEffort = 0.3 };
                     context.Aircraft.Add(aircraft_2);
 
                     var flightToUpdate = new Flight { UpdateDate = new DateTime(2019, 10, 02, 10, 12, 36), Aircraft = aircraft, AirportDeparture = departure, AirportDestination = destination };
@@ -757,7 +757,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                     Assert.Equal(800, aircraft.FuelCapacity);
                     Assert.Equal(2, aircraft.FuelConsumption);
                     Assert.Equal(500, aircraft.Speed);
-                    Assert.Equal(0.3m, aircraft.TakeOffEffort);
+                    Assert.Equal(0.3, aircraft.TakeOffEffort);
 
                     var airportDeparture = flight.AirportDeparture;
                     Assert.NotNull(airportDeparture);

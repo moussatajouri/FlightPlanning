@@ -28,17 +28,9 @@ namespace FlightPlanning.Services.Flights.DataAccess
                     .HasName("UK_Aircraft_Name")
                     .IsUnique();
 
-                entity.Property(e => e.FuelCapacity).HasColumnType("decimal(10, 4)");
-
-                entity.Property(e => e.FuelConsumption).HasColumnType("decimal(10, 4)");
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(200);
-
-                entity.Property(e => e.Speed).HasColumnType("decimal(8, 4)");
-
-                entity.Property(e => e.TakeOffEffort).HasColumnType("decimal(10, 4)");
             });
 
             modelBuilder.Entity<Airport>(entity =>
@@ -75,10 +67,6 @@ namespace FlightPlanning.Services.Flights.DataAccess
                     .HasColumnName("ICAO")
                     .HasMaxLength(4)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Latitude).HasColumnType("decimal(18, 15)");
-
-                entity.Property(e => e.Longitude).HasColumnType("decimal(18, 15)");
 
                 entity.Property(e => e.Name)
                     .IsRequired()

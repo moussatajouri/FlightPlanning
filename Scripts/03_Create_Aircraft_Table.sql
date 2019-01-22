@@ -7,10 +7,10 @@ Go
 CREATE TABLE [Aircraft] (
     [Id] INT NOT NULL IDENTITY,
 	[Name] nvarchar(200) NOT NULL,
-	[Speed] Decimal(8,4) NOT NULL,
-	[FuelCapacity] Decimal(10,4) NOT NULL,
-	[FuelConsumption] Decimal(10,4) NOT NULL,
-	[TakeOffEffort] Decimal(10,4) NOT NULL
+	[Speed] float NOT NULL,
+	[FuelCapacity] float NOT NULL,
+	[FuelConsumption] float NOT NULL,
+	[TakeOffEffort] float NOT NULL
     CONSTRAINT [PK_Aircraft] PRIMARY KEY ([Id]),	
     CONSTRAINT [UK_Aircraft_Name] UNIQUE ([Name])
 );

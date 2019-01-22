@@ -18,9 +18,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             using (var context = new FlightsDbContext(options))
             {
-                context.Airport.Add(new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15m, Longitude = 60.1546m, Name = "Name_1" });
-                context.Airport.Add(new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BBB", Icao = "BBBB", Latitude = 22.15m, Longitude = 70.9146m, Name = "Name_2" });
-                context.Airport.Add(new Airport { City = "city_3", CountryName = "CountryName_3", Iata = "CCC", Icao = "CCCC", Latitude = 32.15m, Longitude = 80.0021m, Name = "Name_3" });
+                context.Airport.Add(new Airport { City = "city_1", CountryName = "CountryName_1", Iata = "AAA", Icao = "AAAA", Latitude = 12.15, Longitude = 60.1546, Name = "Name_1" });
+                context.Airport.Add(new Airport { City = "city_2", CountryName = "CountryName_2", Iata = "BBB", Icao = "BBBB", Latitude = 22.15, Longitude = 70.9146, Name = "Name_2" });
+                context.Airport.Add(new Airport { City = "city_3", CountryName = "CountryName_3", Iata = "CCC", Icao = "CCCC", Latitude = 32.15, Longitude = 80.0021, Name = "Name_3" });
 
                 var insertCount = context.SaveChanges();
 
@@ -76,8 +76,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal("CountryName_2", airport.CountryName);
                 Assert.Equal("BBB", airport.Iata);
                 Assert.Equal("BBBB", airport.Icao);
-                Assert.Equal(22.15m, airport.Latitude);
-                Assert.Equal(70.9146m, airport.Longitude);
+                Assert.Equal(22.15, airport.Latitude);
+                Assert.Equal(70.9146, airport.Longitude);
                 Assert.Equal("Name_2", airport.Name);
             }
         }
@@ -140,8 +140,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal("CountryName_2", airport.CountryName);
                 Assert.Equal("BBB", airport.Iata);
                 Assert.Equal("BBBB", airport.Icao);
-                Assert.Equal(22.15m, airport.Latitude);
-                Assert.Equal(70.9146m, airport.Longitude);
+                Assert.Equal(22.15, airport.Latitude);
+                Assert.Equal(70.9146, airport.Longitude);
                 Assert.Equal("Name_2", airport.Name);
             }
         }
@@ -291,8 +291,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                     CountryName = "CountryName_X",
                     Iata = "XXX",
                     Icao = "XXXX",
-                    Latitude = 22.15m,
-                    Longitude = 70.9146m,
+                    Latitude = 22.15,
+                    Longitude = 70.9146,
                     Name = "Name_X"
                 };
 
@@ -309,8 +309,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.Equal("CountryName_X", airport.CountryName);
                 Assert.Equal("XXX", airport.Iata);
                 Assert.Equal("XXXX", airport.Icao);
-                Assert.Equal(22.15m, airport.Latitude);
-                Assert.Equal(70.9146m, airport.Longitude);
+                Assert.Equal(22.15, airport.Latitude);
+                Assert.Equal(70.9146, airport.Longitude);
                 Assert.Equal("Name_X", airport.Name);
             }
         }
@@ -424,8 +424,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 expectedAirport.CountryName = "CountryName_1_upd";
                 expectedAirport.Iata = "OOO";
                 expectedAirport.Icao = "OOOO";
-                expectedAirport.Latitude = 10.33m;
-                expectedAirport.Longitude = 44.444m;
+                expectedAirport.Latitude = 10.33;
+                expectedAirport.Longitude = 44.444;
                 expectedAirport.Name = "Name_1_upd";
             }
 

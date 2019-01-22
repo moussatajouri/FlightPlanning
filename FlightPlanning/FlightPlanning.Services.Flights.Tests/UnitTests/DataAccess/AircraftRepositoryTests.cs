@@ -19,9 +19,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
         {
             using (var context = new FlightsDbContext(options))
             {
-                context.Aircraft.Add(new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2m });
-                context.Aircraft.Add(new Aircraft { Name = "Name_2", FuelCapacity = 1500, FuelConsumption = 0.6m, Speed = 750, TakeOffEffort = 0.3m });
-                context.Aircraft.Add(new Aircraft { Name = "Name_3", FuelCapacity = 1200, FuelConsumption = 0.4m, Speed = 900, TakeOffEffort = 0.4m });
+                context.Aircraft.Add(new Aircraft { Name = "Name_1", FuelCapacity = 1000, FuelConsumption = 1, Speed = 800, TakeOffEffort = 0.2 });
+                context.Aircraft.Add(new Aircraft { Name = "Name_2", FuelCapacity = 1500, FuelConsumption = 0.6, Speed = 750, TakeOffEffort = 0.3 });
+                context.Aircraft.Add(new Aircraft { Name = "Name_3", FuelCapacity = 1200, FuelConsumption = 0.4, Speed = 900, TakeOffEffort = 0.4 });
 
                 var insertCount = context.SaveChanges();
 
@@ -74,9 +74,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 var aircraft = aircrafts.SingleOrDefault(a => a.Name == "Name_2");
                 Assert.NotNull(aircraft);
                 Assert.Equal(1500, aircraft.FuelCapacity);
-                Assert.Equal(0.6m, aircraft.FuelConsumption);
+                Assert.Equal(0.6, aircraft.FuelConsumption);
                 Assert.Equal(750, aircraft.Speed);
-                Assert.Equal(0.3m, aircraft.TakeOffEffort);
+                Assert.Equal(0.3, aircraft.TakeOffEffort);
             }
         }
 
@@ -136,9 +136,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
                 Assert.NotNull(aircraft);
                 Assert.Equal(1500, aircraft.FuelCapacity);
-                Assert.Equal(0.6m, aircraft.FuelConsumption);
+                Assert.Equal(0.6, aircraft.FuelConsumption);
                 Assert.Equal(750, aircraft.Speed);
-                Assert.Equal(0.3m, aircraft.TakeOffEffort);
+                Assert.Equal(0.3, aircraft.TakeOffEffort);
             }
         }
 
@@ -278,9 +278,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 {
                     Name = "aircraft_X",
                     FuelCapacity= 99999,
-                    FuelConsumption= 1.12m,
+                    FuelConsumption= 1.12,
                     Speed = 545,
-                    TakeOffEffort= 45.36m
+                    TakeOffEffort= 45.36
                 };
 
                 aircraftRepositoy.InsertAircraft(aircraft);
@@ -294,9 +294,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 Assert.NotEqual(0, aircraft.Id);
                 Assert.Equal("aircraft_X", aircraft.Name);
                 Assert.Equal(99999, aircraft.FuelCapacity);
-                Assert.Equal(1.12m, aircraft.FuelConsumption);
+                Assert.Equal(1.12, aircraft.FuelConsumption);
                 Assert.Equal(545, aircraft.Speed);
-                Assert.Equal(45.36m, aircraft.TakeOffEffort);
+                Assert.Equal(45.36, aircraft.TakeOffEffort);
             }
         }
 
@@ -401,9 +401,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 expectedAircraft = context.Aircraft.Single(a => a.Name == "Name_2");
                 expectedAircraft.Name = "aircraft_X";
                 expectedAircraft.FuelCapacity = 5555;
-                expectedAircraft.FuelConsumption = 0.95m;
+                expectedAircraft.FuelConsumption = 0.95;
                 expectedAircraft.Speed = 566;
-                expectedAircraft.TakeOffEffort = 13.99m;
+                expectedAircraft.TakeOffEffort = 13.99;
             }
 
             using (var context = new FlightsDbContext(options))
