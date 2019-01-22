@@ -1,0 +1,359 @@
+﻿
+<script type="text/javascript" src="~/js/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="~/js/jquery.dataTables.min.js"></script>
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <span class="panel-title">Airport Administration</span>
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-success airport-delete" data-toggle="modal" data-target="#CreateModal"><span class="glyphicon glyphicon-plus"></span> Add Airport</button>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <table id="airport" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>City</th>
+                                <th>CountryName</th>
+                                <th>Iata</th>
+                                <th>Icao</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm delete airport</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="modal-title" id="deleteId"></h5>
+                <h5 class="modal-title" id="deleteIdLabel"></h5>
+                <h5 class="modal-title" id="deleteName"></h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="deleteConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="UpdateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Airport</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <h5 class="modal-title" id="updateIdLabel"></h5>
+                    <h5 class="modal-title" id="updateId"></h5>
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Name:</label>
+                    <input type="text" class="form-control" id="updateName">
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">City:</label>
+                    <input type="text" class="form-control" id="updateCity">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">CountryName:</label>
+                    <input type="text" class="form-control" id="updateCountryName">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Iata (3 characters):</label>
+                    <input type="text" class="form-control" id="updateIata">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Icao (4 characters):</label>
+                    <input type="text" class="form-control" id="updateIcao">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Latitude:</label>
+                    <input type="text" class="form-control" id="updateLatitude">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Longitude:</label>
+                    <input type="text" class="form-control" id="updateLongitude">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateConfirm">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Airport</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Name:</label>
+                    <input type="text" class="form-control" id="createName">
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">City:</label>
+                    <input type="text" class="form-control" id="createCity">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">CountryName:</label>
+                    <input type="text" class="form-control" id="createCountryName">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Iata (3 characters):</label>
+                    <input type="text" class="form-control" id="createIata">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Icao (4 characters):</label>
+                    <input type="text" class="form-control" id="createIcao">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Latitude:</label>
+                    <input type="text" class="form-control" id="createLatitude">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Longitude:</label>
+                    <input type="text" class="form-control" id="createLongitude">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="createConfirm">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        var table = $('#airport').DataTable({
+            "ajax": {
+                "url": '@Url.Action("GetAllAirport", "Airport")',
+                'dataSrc': '',
+                "contentType": "application/json; charset=utf-8",
+                "type": "GET"
+            },
+            "columns": [
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "city" },
+                { "data": "countryName" },
+                { "data": "iata" },
+                { "data": "icao" },
+                { "data": "latitude" },
+                { "data": "longitude" }
+            ]
+            ,
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                {
+                "targets": 8,
+                    "data": null,
+                    "searchable": false,
+                    "sortable": false,
+                    "defaultContent": '<div><button type="button" class="btn btn-info airport-update" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-pencil"></span></button>' +
+                        '<button type="button" class="btn btn-danger airport-delete" data-toggle="modal" data-target="#DeleteModal"><span class="glyphicon glyphicon-trash"></span></button></div>'
+
+            }]
+        });
+
+        //$('#airport tbody').on('click', 'button', function () {
+        //    var data = table.row($(this).parents('tr')).data();
+        //    console.log(data);
+        //    console.log($(this).hasClass("airport-update"));
+        //    console.log($(this).hasClass("airport-delete"));
+        //    //data.name = 'test';
+        //    alert(data.id + "'s salary is: " + data.name);
+        //    $('#airport').DataTable().ajax.reload();
+        //});
+
+
+        $('#DeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var recipient = button.data('whatever')
+            var modal = $(this);
+
+            var data = table.row($(event.relatedTarget).parents('tr')).data();
+
+            modal.find('#deleteId').text(data.id);
+            modal.find('#deleteIdLabel').text('Airport Id: ' + data.id);
+            modal.find('#deleteName').text('Airport Name: ' + data.name);
+
+            //modal.find('#deleteId').val(data.id)
+            //modal.find('#deleteName').val(data.name)
+        });
+
+        $('#deleteConfirm').click(function () {
+
+            var request = {
+                airportId: $('#deleteId')
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Delete", "Airport")',
+                async: false,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(request),
+                success: function (result) {
+                    console.log(result);
+                    if (result == "OK") {
+                        location.reload();
+                    } else if (result == "KO") {
+                        alert("Veuillez re-votez");
+                    }
+                }
+            });
+
+            $('#airport').DataTable().ajax.reload();
+            $('#DeleteModal').modal('hide');
+        });
+
+        $('#UpdateModal').on('show.bs.modal', function (event) {
+
+            var data = table.row($(event.relatedTarget).parents('tr')).data();
+
+            var modal = $(this);
+
+            modal.find('#updateIdLabel').text('Airport Id: ' + data.id);
+            modal.find('#updateId').text(data.id);
+            modal.find('#updateName').val(data.name);
+            modal.find('#updateCity').val(data.city);
+            modal.find('#updateCountryName').val(data.countryName);
+            modal.find('#updateIata').val(data.iata);
+            modal.find('#updateIcao').val(data.icao);
+            modal.find('#updateLatitude').val(data.latitude);
+            modal.find('#updateLongitude').val(data.longitude);
+        });
+
+        $('#updateConfirm').click(function () {
+
+            var request = {
+                Id: parseInt($('#updateId').val()),
+                Name: $('#updateName').val(),
+                City: $('#updateCity').val(),
+                CountryName: $('#updateCountryName').val(),
+                Iata: $('#updateIata').val(),
+                Icao: $('#updateIcao').val(),
+                Latitude: $('#updateLatitude').val(),
+                Longitude: $('#updateLongitude').val()
+            }
+            console.log(request);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateAirport", "Airport")',
+                async: false,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(request),
+                success: function (result) {
+                    console.log(result);
+                }
+            });
+
+            $('#airport').DataTable().ajax.reload();
+            $('#UpdateModal').modal('hide');
+            
+        });
+
+        $('#CreateModal').on('show.bs.modal', function (event) {
+
+            var modal = $(this);
+            modal.find('#createName').val('');
+            modal.find('#createCity').val('');
+            modal.find('#createCountryName').val('');
+            modal.find('#createIata').val('');
+            modal.find('#createIcao').val('');
+            modal.find('#createLatitude').val('');
+            modal.find('#createLongitude').val('');
+        });
+
+        $('#createConfirm').click(function () {
+
+            var request = {
+                Name: $('#createName').val(),
+                City: $('#createCity').val(),
+                CountryName: $('#createCountryName').val(),
+                Iata: $('#createIata').val(),
+                Icao: $('#createIcao').val(),
+                Latitude: $('#createLatitude').val(),
+                Longitude: $('#createLongitude').val()
+            }
+
+            console.log(request);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CreateAirport", "Airport")',
+                async: false,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(request),
+                success: function (result) {
+                    console.log(result);
+                }
+            });
+
+            $('#airport').DataTable().ajax.reload();
+            $('#CreateModal').modal('hide');
+            
+        });
+    });
+</script>
+
+

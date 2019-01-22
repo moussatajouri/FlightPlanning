@@ -22,7 +22,7 @@ namespace FlightPlanning.Services.Flights.Controllers
         }
 
         [HttpGet]
-        [Route("All")]
+        [Route("all")]
         public IActionResult GetAllAirports()
         {
             var airports = _airportService.GetAllAirports();
@@ -55,7 +55,7 @@ namespace FlightPlanning.Services.Flights.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Put(int id)
+        public IActionResult Delete(int id)
         {
             _airportService.DeleteAirport(id);
 
