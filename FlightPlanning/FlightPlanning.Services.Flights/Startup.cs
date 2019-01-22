@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FlightPlanning.Services.Flights.BusinessLogic;
 using FlightPlanning.Services.Flights.DataAccess;
 using FlightPlanning.Services.Flights.Models;
+using FlightPlanning.Services.Flights.Transverse;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,7 +35,13 @@ namespace FlightPlanning.Services.Flights
 
             services.AddScoped<IAirportRepository, AirportRepository>();
             services.AddScoped<IAircraftRepository, AircraftRepository>();
+            services.AddScoped<IFlightRepository, FlightRepository>();
 
+            services.AddTransient<IAircraftService, AircraftService>();
+            services.AddTransient<IAirportService, AirportService>();
+            services.AddTransient<IFlightService, FlightService>();
+            services.AddTransient<ICalculator, Calculator>();
+            services.AddTransient<IDistanceCalculator, DistanceCalculator>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
