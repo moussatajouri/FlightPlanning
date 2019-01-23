@@ -9,9 +9,7 @@ namespace FlightPlanning.WebMVC.BusinessLogic
     public interface IAirportService
     {
         Task<BasicResponse<IEnumerable<Airport>>> GetAllAirports();
-
-        //Airport GetAirportById(int airportId);
-
+        
         Task<BasicResponse<string>> InsertAirport(Airport airport);
 
         Task<BasicResponse<string>> UpdateAirport(Airport airport);

@@ -5,9 +5,9 @@
 <div class="row">
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <span class="panel-title">Airport Administration</span>
+            <span class="panel-title">Aircraft Administration</span>
             <div class="btn-group pull-right">
-                <button type="button" class="btn btn-success airport-delete" data-toggle="modal" data-target="#CreateModal"><span class="glyphicon glyphicon-plus"></span> Add Airport</button>
+                <button type="button" class="btn btn-success aircraft-delete" data-toggle="modal" data-target="#CreateModal"><span class="glyphicon glyphicon-plus"></span> Add Aircraft</button>
             </div>
         </div>
 
@@ -15,17 +15,15 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    <table id="airport" class="display" style="width:100%">
+                    <table id="aircraft" class="display" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
-                                <th>City</th>
-                                <th>CountryName</th>
-                                <th>Iata</th>
-                                <th>Icao</th>
-                                <th>Latitude</th>
-                                <th>Longitude</th>
+                                <th>Speed</th>
+                                <th>FuelCapacity</th>
+                                <th>FuelConsumption</th>
+                                <th>TakeOffEffort</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -42,7 +40,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm delete airport</h5>
+                <h5 class="modal-title">Confirm delete aircraft</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -64,7 +62,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Update Airport</h5>
+                <h5 class="modal-title">Update Aircraft</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -78,34 +76,25 @@
                     <label for="recipient-name" class="col-form-label">Name:</label>
                     <input type="text" class="form-control" id="updateName">
                 </div>
+
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">City:</label>
-                    <input type="text" class="form-control" id="updateCity">
+                    <label for="recipient-name" class="col-form-label">Speed:</label>
+                    <input type="text" class="form-control" id="updateSpeed">
                 </div>
 
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">CountryName:</label>
-                    <input type="text" class="form-control" id="updateCountryName">
+                    <label for="recipient-name" class="col-form-label">FuelCapacity:</label>
+                    <input type="text" class="form-control" id="updateFuelCapacity">
                 </div>
 
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Iata (3 characters):</label>
-                    <input type="text" class="form-control" id="updateIata">
+                    <label for="recipient-name" class="col-form-label">FuelConsumption:</label>
+                    <input type="text" class="form-control" id="updateFuelConsumption">
                 </div>
 
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Icao (4 characters):</label>
-                    <input type="text" class="form-control" id="updateIcao">
-                </div>
-
-                <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Latitude:</label>
-                    <input type="text" class="form-control" id="updateLatitude">
-                </div>
-
-                <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Longitude:</label>
-                    <input type="text" class="form-control" id="updateLongitude">
+                    <label for="recipient-name" class="col-form-label">TakeOffEffort:</label>
+                    <input type="text" class="form-control" id="updateTakeOffEffort">
                 </div>
 
             </div>
@@ -121,45 +110,36 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create Airport</h5>
+                <h5 class="modal-title">Create Aircraft</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                
+
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Name:</label>
                     <input type="text" class="form-control" id="createName">
                 </div>
+
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">City:</label>
-                    <input type="text" class="form-control" id="createCity">
+                    <label for="recipient-name" class="col-form-label">Speed:</label>
+                    <input type="text" class="form-control" id="createSpeed">
                 </div>
 
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">CountryName:</label>
-                    <input type="text" class="form-control" id="createCountryName">
+                    <label for="recipient-name" class="col-form-label">FuelCapacity:</label>
+                    <input type="text" class="form-control" id="createFuelCapacity">
                 </div>
 
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Iata (3 characters):</label>
-                    <input type="text" class="form-control" id="createIata">
+                    <label for="recipient-name" class="col-form-label">FuelConsumption:</label>
+                    <input type="text" class="form-control" id="createFuelConsumption">
                 </div>
 
                 <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Icao (4 characters):</label>
-                    <input type="text" class="form-control" id="createIcao">
-                </div>
-
-                <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Latitude:</label>
-                    <input type="text" class="form-control" id="createLatitude">
-                </div>
-
-                <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Longitude:</label>
-                    <input type="text" class="form-control" id="createLongitude">
+                    <label for="recipient-name" class="col-form-label">TakeOffEffort:</label>
+                    <input type="text" class="form-control" id="createTakeOffEffort">
                 </div>
 
             </div>
@@ -175,9 +155,9 @@
 <script>
     $(document).ready(function () {
 
-        var table = $('#airport').DataTable({
+        var table = $('#aircraft').DataTable({
             "ajax": {
-                "url": '@Url.Action("GetAllAirport", "Airport")',
+                "url": '@Url.Action("GetAllAircraft", "Aircraft")',
                 "contentType": "application/json; charset=utf-8",
                 "type": "GET",
                 "dataSrc": function (response) {
@@ -191,14 +171,14 @@
                 }
             },
             "columns": [
-                { "data": "id" },
+                {
+                    "data": "id"
+                },
                 { "data": "name" },
-                { "data": "city" },
-                { "data": "countryName" },
-                { "data": "iata" },
-                { "data": "icao" },
-                { "data": "latitude" },
-                { "data": "longitude" }
+                { "data": "speed" },
+                { "data": "fuelCapacity" },
+                { "data": "fuelConsumption" },
+                { "data": "takeOffEffort" }
             ]
             ,
             "columnDefs": [
@@ -208,12 +188,12 @@
                     "searchable": false,
                 },
                 {
-                "targets": 8,
+                "targets": 6,
                     "data": null,
                     "searchable": false,
                     "sortable": false,
-                    "defaultContent": '<div><button type="button" class="btn btn-info airport-update" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-pencil"></span></button>' +
-                        '<button type="button" class="btn btn-danger airport-delete" data-toggle="modal" data-target="#DeleteModal"><span class="glyphicon glyphicon-trash"></span></button></div>'
+                    "defaultContent": '<div><button type="button" class="btn btn-info aircraft-update" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-pencil"></span></button>' +
+                        '<button type="button" class="btn btn-danger aircraft-delete" data-toggle="modal" data-target="#DeleteModal"><span class="glyphicon glyphicon-trash"></span></button></div>'
 
             }]
         });
@@ -226,8 +206,8 @@
             var data = table.row($(event.relatedTarget).parents('tr')).data();
 
             modal.find('#deleteId').val(data.id);
-            modal.find('#deleteIdLabel').text('Airport Id: ' + data.id);
-            modal.find('#deleteName').text('Airport Name: ' + data.name);
+            modal.find('#deleteIdLabel').text('Aircraft Id: ' + data.id);
+            modal.find('#deleteName').text('Aircraft Name: ' + data.name);
 
         });
 
@@ -237,7 +217,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("DeleteAirport", "Airport")',
+                url: '@Url.Action("DeleteAircraft", "Aircraft")',
 
                 async: false,
                 dataType: 'json',
@@ -248,7 +228,7 @@
                     if (response.anomaly) {
                         alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
                     } else {
-                        $('#airport').DataTable().ajax.reload();
+                        $('#aircraft').DataTable().ajax.reload();
                         $('#DeleteModal').modal('hide');
                     }
                 }
@@ -261,37 +241,29 @@
 
             var modal = $(this);
 
-            modal.find('#updateIdLabel').text('Airport Id: ' + data.id);
+            modal.find('#updateIdLabel').text('Aircraft Id: ' + data.id);
             modal.find('#updateId').text(data.id);
             modal.find('#updateId').val(data.id);
             modal.find('#updateName').val(data.name);
-            modal.find('#updateCity').val(data.city);
-            modal.find('#updateCountryName').val(data.countryName);
-            modal.find('#updateIata').val(data.iata);
-            modal.find('#updateIcao').val(data.icao);
-            modal.find('#updateLatitude').val(data.latitude);
-            modal.find('#updateLongitude').val(data.longitude);
+            modal.find('#updateSpeed').val(data.speed);
+            modal.find('#updateFuelCapacity').val(data.fuelCapacity);
+            modal.find('#updateFuelConsumption').val(data.fuelConsumption);
+            modal.find('#updateTakeOffEffort').val(data.takeOffEffort);
         });
 
         $('#updateConfirm').click(function () {
-
-            console.log($('#updateId').val());
-            console.log($('#updateId').text());
             var request = {
                 Id: parseInt($('#updateId').val()),
                 Name: $('#updateName').val(),
-                City: $('#updateCity').val(),
-                CountryName: $('#updateCountryName').val(),
-                Iata: $('#updateIata').val(),
-                Icao: $('#updateIcao').val(),
-                Latitude: $('#updateLatitude').val(),
-                Longitude: $('#updateLongitude').val()
+                Speed: $('#updateSpeed').val(),
+                FuelCapacity: $('#updateFuelCapacity').val(),
+                FuelConsumption: $('#updateFuelConsumption').val(),
+                TakeOffEffort: $('#updateTakeOffEffort').val()
             }
-            console.log(request);
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("UpdateAirport", "Airport")',
+                url: '@Url.Action("UpdateAircraft", "Aircraft")',
                 async: false,
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
@@ -300,7 +272,7 @@
                     if (response.anomaly) {
                         alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
                     } else {
-                        $('#airport').DataTable().ajax.reload();
+                        $('#aircraft').DataTable().ajax.reload();
                         $('#UpdateModal').modal('hide');
                     }
                 }
@@ -311,31 +283,28 @@
 
             var modal = $(this);
             modal.find('#createName').val('');
-            modal.find('#createCity').val('');
-            modal.find('#createCountryName').val('');
-            modal.find('#createIata').val('');
-            modal.find('#createIcao').val('');
-            modal.find('#createLatitude').val('');
-            modal.find('#createLongitude').val('');
+            modal.find('#createName').val('');
+            modal.find('#createSpeed').val('');
+            modal.find('#createFuelCapacity').val('');
+            modal.find('#createFuelConsumption').val('');
+            modal.find('#createTakeOffEffort').val('');
         });
 
         $('#createConfirm').click(function () {
 
             var request = {
                 Name: $('#createName').val(),
-                City: $('#createCity').val(),
-                CountryName: $('#createCountryName').val(),
-                Iata: $('#createIata').val(),
-                Icao: $('#createIcao').val(),
-                Latitude: $('#createLatitude').val(),
-                Longitude: $('#createLongitude').val()
+                Speed: $('#createSpeed').val(),
+                FuelCapacity: $('#createFuelCapacity').val(),
+                FuelConsumption: $('#createFuelConsumption').val(),
+                TakeOffEffort: $('#createTakeOffEffort').val()
             }
 
             console.log(request);
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("CreateAirport", "Airport")',
+                url: '@Url.Action("CreateAircraft", "Aircraft")',
                 async: false,
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
@@ -344,7 +313,7 @@
                     if (response.anomaly) {
                         alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
                     } else {
-                        $('#airport').DataTable().ajax.reload();
+                        $('#aircraft').DataTable().ajax.reload();
                         $('#CreateModal').modal('hide');
                     }
                 }

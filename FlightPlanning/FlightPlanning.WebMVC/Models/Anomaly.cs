@@ -9,8 +9,5 @@ namespace FlightPlanning.WebMVC.Models
     {
         public string Code { get; set; }
         public string Message { get; set; }
-        //public string Type { get; set; }
-        //public string InnerExceptionMessage { get; set; }
-        //public string InnerExceptionStackTrace { get; set; }
     }
 }

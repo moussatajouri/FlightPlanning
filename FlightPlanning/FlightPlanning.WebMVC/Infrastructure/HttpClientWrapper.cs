@@ -21,9 +21,10 @@ namespace FlightPlanning.WebMVC.Infrastructure
 
         public async Task<BasicResponse<T>> GetAsync<T>(string uri)
         {
-            var response = new BasicResponse<T>();
-            
             var apiResponse = await _httpClient.GetAsync(uri);
+
+            var response = new BasicResponse<T>();
+
             if (!apiResponse.IsSuccessStatusCode)
             {
                 response.Anomaly = new Anomaly { Code = "Resource Access error" };
@@ -42,7 +43,7 @@ namespace FlightPlanning.WebMVC.Infrastructure
             return response;
         }        
 
-        public async Task<BasicResponse<T>> PostAsync<T>(object request, string uri)
+        public async Task<BasicResponse<T>> PostAsync<T>(string uri, object request)
         {
             var response = new BasicResponse<T>();
 
@@ -61,7 +62,7 @@ namespace FlightPlanning.WebMVC.Infrastructure
             return response;
         }
 
-        public async Task<BasicResponse<T>> PutAsync<T>(object request, string uri)
+        public async Task<BasicResponse<T>> PutAsync<T>(string uri, object request)
         {
             var response = new BasicResponse<T>();
             
