@@ -8,14 +8,14 @@ namespace FlightPlanning.WebMVC.BusinessLogic
 {
     public interface IAirportService
     {
-        Task<IEnumerable<Airport>> GetAllAirports();
+        Task<BasicResponse<IEnumerable<Airport>>> GetAllAirports();
 
         //Airport GetAirportById(int airportId);
 
-        void InsertAirport(Airport airport);
+        Task<BasicResponse<string>> InsertAirport(Airport airport);
 
-        void UpdateAirport(Airport airport);
+        Task<BasicResponse<string>> UpdateAirport(Airport airport);
 
-        void DeleteAirport(int airportId);
+        Task<BasicResponse<string>> DeleteAirport(int airportId);
     }
 }

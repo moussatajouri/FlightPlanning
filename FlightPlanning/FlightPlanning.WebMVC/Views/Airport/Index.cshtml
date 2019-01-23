@@ -48,7 +48,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h5 class="modal-title" id="deleteId"></h5>
+                <h5 class="modal-title" id="deleteId" style="visibility:hidden"></h5>
                 <h5 class="modal-title" id="deleteIdLabel"></h5>
                 <h5 class="modal-title" id="deleteName"></h5>
             </div>
@@ -72,7 +72,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <h5 class="modal-title" id="updateIdLabel"></h5>
-                    <h5 class="modal-title" id="updateId"></h5>
+                    <h5 class="modal-title" id="updateId" style="visibility:hidden"></h5>
                 </div>
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Name:</label>
@@ -178,9 +178,25 @@
         var table = $('#airport').DataTable({
             "ajax": {
                 "url": '@Url.Action("GetAllAirport", "Airport")',
-                'dataSrc': '',
+                //'dataSrc': 'data',
                 "contentType": "application/json; charset=utf-8",
-                "type": "GET"
+                "type": "GET",
+                //"success": function (response) {
+                //    if (response.anomaly) {
+                //        alert('an exception has been occured. Code : ' + response.anomaly.code);
+                //    }
+                //    console.log(response);
+                //    return response; 
+                //}
+                "dataSrc": function (response) {
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code);
+                    }
+                    if (!response.data) {
+                        response.data = [];
+                    }
+                    return response.data;
+                }
             },
             "columns": [
                 { "data": "id" },
@@ -210,17 +226,6 @@
             }]
         });
 
-        //$('#airport tbody').on('click', 'button', function () {
-        //    var data = table.row($(this).parents('tr')).data();
-        //    console.log(data);
-        //    console.log($(this).hasClass("airport-update"));
-        //    console.log($(this).hasClass("airport-delete"));
-        //    //data.name = 'test';
-        //    alert(data.id + "'s salary is: " + data.name);
-        //    $('#airport').DataTable().ajax.reload();
-        //});
-
-
         $('#DeleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var recipient = button.data('whatever')
@@ -228,39 +233,34 @@
 
             var data = table.row($(event.relatedTarget).parents('tr')).data();
 
-            modal.find('#deleteId').text(data.id);
+            modal.find('#deleteId').val(data.id);
             modal.find('#deleteIdLabel').text('Airport Id: ' + data.id);
             modal.find('#deleteName').text('Airport Name: ' + data.name);
 
-            //modal.find('#deleteId').val(data.id)
-            //modal.find('#deleteName').val(data.name)
         });
 
         $('#deleteConfirm').click(function () {
 
-            var request = {
-                airportId: $('#deleteId')
-            }
+            var request = $('#deleteId').val();
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("Delete", "Airport")',
+                url: '@Url.Action("DeleteAirport", "Airport")',
+
                 async: false,
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(request),
-                success: function (result) {
-                    console.log(result);
-                    if (result == "OK") {
-                        location.reload();
-                    } else if (result == "KO") {
-                        alert("Veuillez re-votez");
+                success: function (response) {
+                    console.log(response);
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
+                    } else {
+                        $('#airport').DataTable().ajax.reload();
+                        $('#DeleteModal').modal('hide');
                     }
                 }
             });
-
-            $('#airport').DataTable().ajax.reload();
-            $('#DeleteModal').modal('hide');
         });
 
         $('#UpdateModal').on('show.bs.modal', function (event) {
@@ -271,6 +271,7 @@
 
             modal.find('#updateIdLabel').text('Airport Id: ' + data.id);
             modal.find('#updateId').text(data.id);
+            modal.find('#updateId').val(data.id);
             modal.find('#updateName').val(data.name);
             modal.find('#updateCity').val(data.city);
             modal.find('#updateCountryName').val(data.countryName);
@@ -282,6 +283,8 @@
 
         $('#updateConfirm').click(function () {
 
+            console.log($('#updateId').val());
+            console.log($('#updateId').text());
             var request = {
                 Id: parseInt($('#updateId').val()),
                 Name: $('#updateName').val(),
@@ -301,14 +304,15 @@
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(request),
-                success: function (result) {
-                    console.log(result);
+                success: function (response) {
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
+                    } else {
+                        $('#airport').DataTable().ajax.reload();
+                        $('#UpdateModal').modal('hide');
+                    }
                 }
             });
-
-            $('#airport').DataTable().ajax.reload();
-            $('#UpdateModal').modal('hide');
-            
         });
 
         $('#CreateModal').on('show.bs.modal', function (event) {
@@ -344,14 +348,15 @@
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(request),
-                success: function (result) {
-                    console.log(result);
+                success: function (response) {
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
+                    } else {
+                        $('#airport').DataTable().ajax.reload();
+                        $('#CreateModal').modal('hide');
+                    }
                 }
             });
-
-            $('#airport').DataTable().ajax.reload();
-            $('#CreateModal').modal('hide');
-            
         });
     });
 </script>

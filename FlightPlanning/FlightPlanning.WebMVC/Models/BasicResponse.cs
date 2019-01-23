@@ -5,9 +5,18 @@ using System.Threading.Tasks;
 
 namespace FlightPlanning.WebMVC.Models
 {
-    public class BasicResponse
-    {
-        public Status Status { get; set; }
-        public string Message { get; set; }
+    public class BasicResponse<T>
+    {       
+        public Anomaly Anomaly { get; set; }
+
+        public T Data { get; set; }
+
+        public string Status
+        {
+            get
+            {
+                return Anomaly == null ? "OK" : "KO";
+            }
+        }
     }
 }

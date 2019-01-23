@@ -6,6 +6,7 @@ using FlightPlanning.Services.Flights.BusinessLogic;
 using FlightPlanning.Services.Flights.DataAccess;
 using FlightPlanning.Services.Flights.Models;
 using FlightPlanning.Services.Flights.Transverse;
+using FlightPlanning.Services.Flights.Transverse.Exception;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

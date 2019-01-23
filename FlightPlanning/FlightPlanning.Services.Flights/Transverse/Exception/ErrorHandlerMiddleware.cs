@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace FlightPlanning.Services.Flights.Transverse
+namespace FlightPlanning.Services.Flights.Transverse.Exception
 {
     public class ErrorHandlerMiddleware
     {
@@ -33,39 +33,31 @@ namespace FlightPlanning.Services.Flights.Transverse
         private static Task HandleErrorAsync(HttpContext context, System.Exception exception)
         {
             var statusCode = HttpStatusCode.InternalServerError;
-            
-            var code = "error";
-            var message = "There was an error.";
-            var type = "unhandled";
-            var innerExceptionMessage = string.Empty;
-            var innerExceptionStackTrace = string.Empty;
+
+            var response = new Anomaly
+            {
+                Code = "error",
+                Message = "There was an error.",
+                Type = "unhandled"
+            };
 
             switch (exception)
             {
                 case FlightPlanningFunctionalException e:
-                    code = e.Code;
-                    message = e.Message;
-                    type = "functional";
-                    statusCode = HttpStatusCode.BadRequest;                    
+                    response.Code = e.Code;
+                    response.Message = e.Message;
+                    response.Type = "functional";
+                    statusCode = HttpStatusCode.BadRequest;
                     break;
                 case FlightPlanningTechnicalException e:
-                    code = e.Code;
-                    message = e.Message;
-                    innerExceptionMessage = e.InnerException?.Message;
-                    innerExceptionStackTrace = e.InnerException?.StackTrace;
-                    type = "technical";
+                    response.Code = e.Code;
+                    response.Message = e.Message;
+                    response.InnerExceptionMessage = e.InnerException?.Message;
+                    response.InnerExceptionStackTrace = e.InnerException?.StackTrace;
+                    response.Type = "technical";
                     statusCode = HttpStatusCode.InternalServerError;
                     break;
             }
-
-            var response = new
-            {
-                code,
-                message,
-                type,
-                innerExceptionMessage,
-                innerExceptionStackTrace
-            };
 
             var payload = JsonConvert.SerializeObject(response);
             context.Response.ContentType = "application/json";

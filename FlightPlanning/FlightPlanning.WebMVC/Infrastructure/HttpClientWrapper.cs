@@ -1,33 +1,28 @@
-﻿using System;
+﻿using FlightPlanning.WebMVC.Models;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using FlightPlanning.WebMVC.Infrastructure;
-using FlightPlanning.WebMVC.Models;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
-namespace FlightPlanning.WebMVC.BusinessLogic
+namespace FlightPlanning.WebMVC.Infrastructure
 {
-    public class AirportService : IAirportService
+    public class HttpClientWrapper
     {
         private HttpClient _httpClient;
-        private readonly IOptions<ApiConfiguration> _apiConfiguration;
 
-        public AirportService(HttpClient httpClient, IOptions<ApiConfiguration> apiConfiguration)
+        public HttpClientWrapper(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _apiConfiguration = apiConfiguration;
         }
 
-        public async Task<BasicResponse<IEnumerable<Airport>>> GetAllAirports()
+        public async Task<BasicResponse<T>> GetAsync<T>(string uri)
         {
-            var response = new BasicResponse<IEnumerable<Airport>>();
-
-            var uri = API.Airport.GetAllAirport(_apiConfiguration.Value.AirportApiBasePath);
-
+            var response = new BasicResponse<T>();
+            
             var apiResponse = await _httpClient.GetAsync(uri);
             if (!apiResponse.IsSuccessStatusCode)
             {
@@ -37,7 +32,7 @@ namespace FlightPlanning.WebMVC.BusinessLogic
 
             var content = await apiResponse.Content.ReadAsStringAsync();
 
-            response.Data =  JsonConvert.DeserializeObject<IEnumerable<Airport>>(content);
+            response.Data = JsonConvert.DeserializeObject<T>(content);
 
             if (response.Data == null)
             {
@@ -45,15 +40,13 @@ namespace FlightPlanning.WebMVC.BusinessLogic
             }
 
             return response;
-        }
+        }        
 
-        public async Task<BasicResponse<string>> InsertAirport(Airport airport)
+        public async Task<BasicResponse<T>> PostAsync<T>(object request, string uri)
         {
-            var response = new BasicResponse<string>();
+            var response = new BasicResponse<T>();
 
-            var uri = API.Airport.CrudAirport(_apiConfiguration.Value.AirportApiBasePath);
-
-            var requestContent = new StringContent(JsonConvert.SerializeObject(airport), Encoding.UTF8, "application/json");
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             var apiResponse = _httpClient.PostAsync(uri, requestContent).Result;
 
             if (!apiResponse.IsSuccessStatusCode)
@@ -68,13 +61,11 @@ namespace FlightPlanning.WebMVC.BusinessLogic
             return response;
         }
 
-        public async Task<BasicResponse<string>> UpdateAirport(Airport airport)
+        public async Task<BasicResponse<T>> PutAsync<T>(object request, string uri)
         {
-            var response = new BasicResponse<string>();
-
-            var uri = API.Airport.CrudAirport(_apiConfiguration.Value.AirportApiBasePath);
-
-            var requestContent = new StringContent(JsonConvert.SerializeObject(airport), Encoding.UTF8, "application/json");
+            var response = new BasicResponse<T>();
+            
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             var apiResponse = _httpClient.PutAsync(uri, requestContent).Result;
 
             if (!apiResponse.IsSuccessStatusCode)
@@ -89,12 +80,10 @@ namespace FlightPlanning.WebMVC.BusinessLogic
             return response;
         }
 
-        public async Task<BasicResponse<string>> DeleteAirport(int airportId)
+        public async Task<BasicResponse<T>> DeleteAsync<T>(string uri)
         {
-            var response = new BasicResponse<string>();
-
-            var uri = $"{API.Airport.CrudAirport(_apiConfiguration.Value.AirportApiBasePath)}/{airportId}";
-
+            var response = new BasicResponse<T>();
+            
             var apiResponse = _httpClient.DeleteAsync(uri).Result;
 
             if (!apiResponse.IsSuccessStatusCode)

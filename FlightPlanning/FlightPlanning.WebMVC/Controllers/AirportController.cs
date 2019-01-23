@@ -25,59 +25,25 @@ namespace FlightPlanning.WebMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAirport()
         {
-            try
-            {
-                var airports = await _airportService.GetAllAirports();
-                return Json(airports);
-            }
-            catch
-            {
-                return Json("KO");
-            }
+            return Json(await _airportService.GetAllAirports());
         }
 
         [HttpPost]
-        public IActionResult CreateAirport([FromBody]Airport model)
+        public async Task<IActionResult> CreateAirport([FromBody]Airport model)
         {
-            try
-            {
-                _airportService.InsertAirport(model);
-                return Json(new BasicResponse { Status = Status.KO});
-            }
-            catch
-            {
-                return Json(new BasicResponse { Status= Status.KO, Message ="Unhandler Error"});
-            }
+            return Json(await _airportService.InsertAirport(model));
         }
 
         [HttpPost]
-        public IActionResult UpdateAirport([FromBody]Airport model)
+        public async Task<IActionResult> UpdateAirport([FromBody]Airport model)
         {
-            try
-            {
-                _airportService.UpdateAirport(model);
-                return Json(new BasicResponse { Status = Status.KO });
-            }
-            catch
-            {
-                return Json(new BasicResponse { Status = Status.KO, Message = "Unhandler Error" });
-            }
-
+            return Json(await _airportService.UpdateAirport(model));
         }
 
         [HttpPost]
-        public IActionResult DeleteAirport(int airportId)
+        public async Task<IActionResult> DeleteAirport([FromBody]int airportId)
         {
-            try
-            {
-                _airportService.DeleteAirport(airportId);
-                return Json(new BasicResponse { Status = Status.KO });
-            }
-            catch
-            {
-                return Json(new BasicResponse { Status = Status.KO, Message = "Unhandler Error" });
-            }
-
+            return Json(await _airportService.DeleteAirport(airportId));
         }
     }
 }
