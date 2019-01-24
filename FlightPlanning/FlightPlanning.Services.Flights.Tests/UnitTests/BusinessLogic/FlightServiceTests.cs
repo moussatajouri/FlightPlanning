@@ -255,5 +255,74 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
             calculatorMock.Verify(m => m.CalculateDistanceBetweenAirports(It.IsAny<AirportDto>(), It.IsAny<AirportDto>()), Times.Once);
             calculatorMock.Verify(m => m.CalculateNeededFuel(It.IsAny<double>(), It.IsAny<AircraftDto>()), Times.Once);
         }
+
+        [Fact]
+        public void Should_GetAllDetailedFlights_return_EmptyList_When_FlightsIsEmpty()
+        {
+            var calculatorMock = new Mock<ICalculator>();
+            calculatorMock.Setup(m => m.CalculateDistanceBetweenAirports(It.IsAny<AirportDto>(), It.IsAny<AirportDto>())).Verifiable();
+            calculatorMock.Setup(m => m.CalculateNeededFuel(It.IsAny<double>(), It.IsAny<AircraftDto>())).Verifiable();
+
+            var flightRepositoryMock = new Mock<IFlightRepository>();
+            flightRepositoryMock.Setup(m => m.GetAllFlights()).Returns((new List<Flight>()));
+
+            var flightService = new FlightService(flightRepositoryMock.Object, calculatorMock.Object);
+
+            var detailedFlightDtoResult = flightService.GetAllDetailedFlights();
+
+            Assert.NotNull(detailedFlightDtoResult);
+            Assert.Empty(detailedFlightDtoResult);
+
+            flightRepositoryMock.Verify(m => m.GetAllFlights(), Times.Once);
+            calculatorMock.Verify(m => m.CalculateDistanceBetweenAirports(It.IsAny<AirportDto>(), It.IsAny<AirportDto>()), Times.Never);
+            calculatorMock.Verify(m => m.CalculateNeededFuel(It.IsAny<double>(), It.IsAny<AircraftDto>()), Times.Never);
+        }
+
+        [Fact]
+        public void Should_GetAllDetailedFlights_return_DetailedList_When_FlightsIsNotEmpty()
+        {
+            var expectedFlightId_1 = 1;
+            double expectedDistance_1 = 11;
+            var expectedNeededFuel_1 = 111;
+
+            var expectedFlightId_2 = 2;
+            double expectedDistance_2 = 22;
+            var expectedNeededFuel_2 = 222;
+
+            var calculatorMock = new Mock<ICalculator>();
+            calculatorMock.SetupSequence(m => m.CalculateDistanceBetweenAirports(It.IsAny<AirportDto>(), It.IsAny<AirportDto>()))
+                .Returns(expectedDistance_1)
+                .Returns(expectedDistance_2);
+
+            calculatorMock.SetupSequence(m => m.CalculateNeededFuel(It.IsAny<double>(), It.IsAny<AircraftDto>()))
+                .Returns(expectedNeededFuel_1)
+                .Returns(expectedNeededFuel_2);
+
+            var flightRepositoryMock = new Mock<IFlightRepository>();
+
+            flightRepositoryMock.Setup(m => m.GetAllFlights())
+                .Returns(new List<Flight> { new Flight { Id = expectedFlightId_1 }, new Flight { Id = expectedFlightId_2 } });
+
+            var flightService = new FlightService(flightRepositoryMock.Object, calculatorMock.Object);
+
+            var detailedFlightResult = flightService.GetAllDetailedFlights();
+
+            Assert.NotNull(detailedFlightResult);
+            Assert.Equal(2, detailedFlightResult.Count());
+
+            var detailedFlight_1 = detailedFlightResult.FirstOrDefault();
+
+            Assert.NotNull(detailedFlight_1);
+            Assert.NotNull(detailedFlight_1.Flight);
+            Assert.Equal(expectedFlightId_1, detailedFlight_1.Flight.Id);
+
+            Assert.NotNull(detailedFlight_1.FlightPlan);
+            Assert.Equal(expectedDistance_1, detailedFlight_1.FlightPlan.Distance);
+            Assert.Equal(expectedNeededFuel_1, detailedFlight_1.FlightPlan.NeededFuel);
+
+            flightRepositoryMock.Verify(m => m.GetAllFlights(), Times.Once);
+            calculatorMock.Verify(m => m.CalculateDistanceBetweenAirports(It.IsAny<AirportDto>(), It.IsAny<AirportDto>()), Times.Exactly(2));
+            calculatorMock.Verify(m => m.CalculateNeededFuel(It.IsAny<double>(), It.IsAny<AircraftDto>()), Times.Exactly(2));
+        }
     }
 }

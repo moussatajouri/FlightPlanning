@@ -9,5 +9,6 @@ namespace FlightPlanning.WebMVC.Infrastructure
     {
         public string AirportApiBasePath { get; set; }
         public string AircraftApiBasePath { get; set; }
+        public string FlightApiBasePath { get; set; }
     }
 }

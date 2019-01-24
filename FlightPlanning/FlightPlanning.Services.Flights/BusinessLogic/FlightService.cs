@@ -1,5 +1,6 @@
 ﻿using FlightPlanning.Services.Flights.DataAccess;
 using FlightPlanning.Services.Flights.Dto;
+using FlightPlanning.Services.Flights.Models;
 using FlightPlanning.Services.Flights.Transverse.Mapper;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,18 @@ namespace FlightPlanning.Services.Flights.BusinessLogic
         public DetailedFlightDto GetDetailedFlightDtoById(int flightId)
         {
             var flightDb = _flightRepository.GetFlightById(flightId);
-            var flight= FlightMapper.MapToDto(flightDb);
+            return DetailFlight(flightDb);
+        }
+
+        public IEnumerable<DetailedFlightDto> GetAllDetailedFlights()
+        {
+            var flights = _flightRepository.GetAllFlights();
+            return flights?.Select(flight => DetailFlight(flight)).ToList(); ;
+        }
+
+        private DetailedFlightDto DetailFlight(Flight flightDb)
+        {
+            var flight = FlightMapper.MapToDto(flightDb);
 
             if (flight == null)
             {
@@ -80,9 +92,6 @@ namespace FlightPlanning.Services.Flights.BusinessLogic
             };
         }
 
-        public IEnumerable<DetailedFlightDto> GetAllDetailedFlights()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

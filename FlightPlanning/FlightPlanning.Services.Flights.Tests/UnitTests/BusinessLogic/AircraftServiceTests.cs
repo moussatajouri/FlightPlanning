@@ -2,6 +2,7 @@
 using FlightPlanning.Services.Flights.DataAccess;
 using FlightPlanning.Services.Flights.Dto;
 using FlightPlanning.Services.Flights.Models;
+using FlightPlanning.Services.Flights.Transverse.Exception;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -126,6 +127,38 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
             aircraftRepositoryMock.Verify(m => m.InsertAircraft(It.IsAny<Aircraft>()), Times.Never);
         }
 
+        [Theory]
+        [InlineData(null, 99,99,99,99)]
+        [InlineData("", 99, 99, 99, 99)]
+        [InlineData("test", 0, 99, 99, 99)]
+        [InlineData("test", 99, 0, 99, 99)]
+        [InlineData("test", 99, 99, 0, 99)]
+        [InlineData("test", 99, 99, 99, 0)]
+        public void Should_InsertAircraft_Throw_Exception_When_AircraftsHasInvalidData(string name, double fuelcapacity, double fuelConsuption, double speed, double takeOffEffort)
+        {
+            var aircraft = new AircraftDto
+            {
+                Name = name,
+                FuelCapacity = fuelcapacity,
+                FuelConsumption = fuelConsuption,
+                Speed = speed,
+                TakeOffEffort = takeOffEffort
+            };
+
+            var aircraftRepositoryMock = new Mock<IAircraftRepository>();
+
+            aircraftRepositoryMock.Setup(m => m.InsertAircraft(It.IsAny<Aircraft>())).Verifiable();
+
+            var aircraftService = new AircraftService(aircraftRepositoryMock.Object);
+            
+            var exception = Assert.Throws< FlightPlanningFunctionalException>(()=> aircraftService.InsertAircraft(aircraft));
+
+            Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
+            Assert.Equal(ExceptionCodes.InvalidAircraftMessage, exception.Message);
+
+            aircraftRepositoryMock.Verify(m => m.InsertAircraft(It.IsAny<Aircraft>()), Times.Never);
+        }
+
         [Fact]
         public void Should_InsertAircraft_Call_InsertAircraft_When_AircraftsIsNotNull()
         {
@@ -135,7 +168,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
 
             var aircraftService = new AircraftService(aircraftRepositoryMock.Object);
 
-            aircraftService.InsertAircraft(new AircraftDto());
+            aircraftService.InsertAircraft(new AircraftDto { Name= "test", FuelCapacity=99, FuelConsumption = 99, Speed = 10, TakeOffEffort=3 });
 
             aircraftRepositoryMock.Verify(m => m.InsertAircraft(It.IsAny<Aircraft>()), Times.Once);
         }
@@ -154,6 +187,38 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
             aircraftRepositoryMock.Verify(m => m.UpdateAircraft(It.IsAny<Aircraft>()), Times.Never);
         }
 
+        [Theory]
+        [InlineData(null, 99, 99, 99, 99)]
+        [InlineData("", 99, 99, 99, 99)]
+        [InlineData("test", 0, 99, 99, 99)]
+        [InlineData("test", 99, 0, 99, 99)]
+        [InlineData("test", 99, 99, 0, 99)]
+        [InlineData("test", 99, 99, 99, 0)]
+        public void Should_UpdateAircraft_Throw_Exception_When_AircraftsHasInvalidData(string name, double fuelcapacity, double fuelConsuption, double speed, double takeOffEffort)
+        {
+            var aircraft = new AircraftDto
+            {
+                Name = name,
+                FuelCapacity = fuelcapacity,
+                FuelConsumption = fuelConsuption,
+                Speed = speed,
+                TakeOffEffort = takeOffEffort
+            };
+
+            var aircraftRepositoryMock = new Mock<IAircraftRepository>();
+
+            aircraftRepositoryMock.Setup(m => m.UpdateAircraft(It.IsAny<Aircraft>())).Verifiable();
+
+            var aircraftService = new AircraftService(aircraftRepositoryMock.Object);
+
+            var exception = Assert.Throws<FlightPlanningFunctionalException>(() => aircraftService.UpdateAircraft(aircraft));
+
+            Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
+            Assert.Equal(ExceptionCodes.InvalidAircraftMessage, exception.Message);
+
+            aircraftRepositoryMock.Verify(m => m.UpdateAircraft(It.IsAny<Aircraft>()), Times.Never);
+        }
+
         [Fact]
         public void Should_UpdateAircraft_Call_UpdateAircraft_When_AircraftsIsNotNull()
         {
@@ -163,7 +228,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
 
             var aircraftService = new AircraftService(aircraftRepositoryMock.Object);
 
-            aircraftService.UpdateAircraft(new AircraftDto());
+            aircraftService.UpdateAircraft(new AircraftDto { Name = "test", FuelCapacity = 99, FuelConsumption = 99, Speed = 10, TakeOffEffort = 3 });
 
             aircraftRepositoryMock.Verify(m => m.UpdateAircraft(It.IsAny<Aircraft>()), Times.Once);
         }

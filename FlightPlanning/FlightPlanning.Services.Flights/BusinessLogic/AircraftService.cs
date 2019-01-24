@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FlightPlanning.Services.Flights.DataAccess;
 using FlightPlanning.Services.Flights.Dto;
+using FlightPlanning.Services.Flights.Transverse.Exception;
 using FlightPlanning.Services.Flights.Transverse.Mapper;
 
 namespace FlightPlanning.Services.Flights.BusinessLogic
@@ -36,6 +37,8 @@ namespace FlightPlanning.Services.Flights.BusinessLogic
                 return;
             }
 
+            ValidateAircraft(aircraft);
+
             _aircraftRepository.InsertAircraft(AircraftMapper.MapFromDto(aircraft));
         }
 
@@ -46,12 +49,22 @@ namespace FlightPlanning.Services.Flights.BusinessLogic
                 return;
             }
 
+            ValidateAircraft(aircraft);
+
             _aircraftRepository.UpdateAircraft(AircraftMapper.MapFromDto(aircraft));
         }
 
         public void DeleteAircraft(int aircraftId)
         {
             _aircraftRepository.DeleteAircraft(aircraftId);
+        }
+
+        private void ValidateAircraft(AircraftDto aircraft)
+        {
+            if(string.IsNullOrEmpty(aircraft.Name) || aircraft.FuelCapacity <= 0 || aircraft.FuelConsumption <= 0 || aircraft.Speed <= 0 || aircraft.TakeOffEffort <= 0)
+            {
+                throw new FlightPlanningFunctionalException(ExceptionCodes.InvalidEntityCode, ExceptionCodes.InvalidAircraftMessage);
+            }
         }
     }
 }

@@ -30,6 +30,14 @@ namespace FlightPlanning.Services.Flights.Controllers
             return Ok(flights);
         }
 
+        [HttpGet("detail/all")]
+        public IActionResult GetAllFlightsDetails()
+        {
+            var flight = _flightService.GetAllDetailedFlights();
+
+            return Ok(flight);
+        }
+
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {

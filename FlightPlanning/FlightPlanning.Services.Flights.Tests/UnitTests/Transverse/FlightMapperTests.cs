@@ -158,36 +158,17 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.Transverse
         {
             var aircraftDto = new AircraftDto
             {
-                Id = 5,
-                Name = "Name",
-                Speed = 500,
-                FuelCapacity = 1000,
-                FuelConsumption = 60,
-                TakeOffEffort = 10
+                Id = 5
             };
 
             var airportDepartureDto = new AirportDto
             {
-                Id = 1,
-                Name = "airportDeparture",
-                City = "airportDeparture",
-                CountryName = "airportDeparture",
-                Iata = "airportDeparture",
-                Icao = "airportDeparture",
-                Latitude = 5,
-                Longitude = 9
+                Id = 1
             };
 
             var airportDestinationDto = new AirportDto
             {
-                Id = 2,
-                Name = "airportDestination",
-                City = "airportDestination",
-                CountryName = "airportDestination",
-                Iata = "airportDestination",
-                Icao = "airportDestination",
-                Latitude = 16,
-                Longitude = 10
+                Id = 2
             };
 
             var date = new DateTime(2018, 3, 2, 1, 1, 1);
@@ -207,33 +188,9 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.Transverse
             Assert.NotNull(flight.UpdateDate);
             Assert.Equal(date, flight.UpdateDate);
 
-            Assert.NotNull(flight.Aircraft);
-            Assert.Equal(aircraftDto.Id, flight.Aircraft.Id);
-            Assert.Equal(aircraftDto.Name, flight.Aircraft.Name);
-            Assert.Equal(aircraftDto.Speed, flight.Aircraft.Speed);
-            Assert.Equal(aircraftDto.FuelCapacity, flight.Aircraft.FuelCapacity);
-            Assert.Equal(aircraftDto.FuelConsumption, flight.Aircraft.FuelConsumption);
-            Assert.Equal(aircraftDto.TakeOffEffort, flight.Aircraft.TakeOffEffort);
-
-            Assert.NotNull(flight.AirportDeparture);
-            Assert.Equal(airportDepartureDto.Id, flight.AirportDeparture.Id);
-            Assert.Equal(airportDepartureDto.Name, flight.AirportDeparture.Name);
-            Assert.Equal(airportDepartureDto.City, flight.AirportDeparture.City);
-            Assert.Equal(airportDepartureDto.CountryName, flight.AirportDeparture.CountryName);
-            Assert.Equal(airportDepartureDto.Iata, flight.AirportDeparture.Iata);
-            Assert.Equal(airportDepartureDto.Icao, flight.AirportDeparture.Icao);
-            Assert.Equal(airportDepartureDto.Latitude, flight.AirportDeparture.Latitude);
-            Assert.Equal(airportDepartureDto.Longitude, flight.AirportDeparture.Longitude);
-
-            Assert.NotNull(flight.AirportDestination);
-            Assert.Equal(airportDestinationDto.Id, flight.AirportDestination.Id);
-            Assert.Equal(airportDestinationDto.Name, flight.AirportDestination.Name);
-            Assert.Equal(airportDestinationDto.City, flight.AirportDestination.City);
-            Assert.Equal(airportDestinationDto.CountryName, flight.AirportDestination.CountryName);
-            Assert.Equal(airportDestinationDto.Iata, flight.AirportDestination.Iata);
-            Assert.Equal(airportDestinationDto.Icao, flight.AirportDestination.Icao);
-            Assert.Equal(airportDestinationDto.Latitude, flight.AirportDestination.Latitude);
-            Assert.Equal(airportDestinationDto.Longitude, flight.AirportDestination.Longitude);
+            Assert.Equal(aircraftDto.Id, flight.AircraftId);
+            Assert.Equal(airportDepartureDto.Id, flight.AirportDepartureId);
+            Assert.Equal(airportDestinationDto.Id, flight.AirportDestinationId);
         }
 
         #endregion MapFromDto

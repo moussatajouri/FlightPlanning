@@ -1,0 +1,779 @@
+﻿
+<script type="text/javascript" src="~/js/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="~/js/jquery.dataTables.min.js"></script>
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <span class="panel-title">Flight dashbord</span>
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-success airport-delete" data-toggle="modal" data-target="#CreateModal"><span class="glyphicon glyphicon-plus"></span> Add Flight</button>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <table id="flight" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Departure</th>
+                                <th>Destination</th>
+                                <th>Airplane</th>
+                                <th>Distance</th>
+                                <th>Needed Fuel</th>
+                                <th>Update Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="CreateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new Flight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">                          
+                            <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <span class="panel-title"><b>Airport departure</b></span>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table id="airportDepartureCreate" class="display" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>CountryName</th>
+                                                        <th>Name</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <span class="panel-title"><b>Airport Destination</b></span>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table id="airportDestinationCreate" class="display table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>CountryName</th>
+                                                        <th>Name</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                           
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <span class="panel-title"><b>Aircraft</b></span>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table id="aircraftCreate" class="display table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Name</th>
+                                                        <th>Speed</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                           
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="createConfirm">Confirm</button>
+            </div>
+            </div>
+    </div>
+</div>
+
+<div class="modal fade" id="UpdateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update new Flight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <h5 class="modal-title" id="updateIdLabel"></h5>
+                            <h5 class="modal-title" id="updateId" style="visibility:hidden"></h5>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <span class="panel-title"><b>Airport departure</b></span>
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table id="airportDepartureUpdate" class="display" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>CountryName</th>
+                                                        <th>Name</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <span class="panel-title"><b>Airport Destination</b></span>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table id="airportDestinationUpdate" class="display table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>CountryName</th>
+                                                        <th>Name</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <span class="panel-title"><b>Aircraft</b></span>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table id="aircraftUpdate" class="display table-bordered" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Name</th>
+                                                        <th>Speed</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm delete Flight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="modal-title" id="deleteId" style="visibility:hidden"></h5>
+                <h5 class="modal-title" id="deleteIdLabel"></h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="deleteConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="InfoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Flight Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+
+            <div class="modal-body">
+
+                <ul class="list-group">
+                    <li class="list-group-item active">Departure Airport</li>
+                    <li class="list-group-item" id="infoDepartureId"></li>
+                    <li class="list-group-item" id="infoDepartureName"></li>
+                    <li class="list-group-item" id="infoDepartureCity"></li>
+                    <li class="list-group-item" id="infoDepartureCountryName"></li>
+                    <li class="list-group-item" id="infoDepartureIata"></li>
+                    <li class="list-group-item" id="infoDepartureIcao"></li>
+                    <li class="list-group-item" id="infoDepartureLatitude"></li>
+                    <li class="list-group-item" id="infoDepartureLongitude"></li>
+                </ul>
+                <hr>
+
+                <ul class="list-group">
+                    <li class="list-group-item active">Destination Airport</li>
+                    <li class="list-group-item" id="infoDestinationId"></li>
+                    <li class="list-group-item" id="infoDestinationName"></li>
+                    <li class="list-group-item" id="infoDestinationCity"></li>
+                    <li class="list-group-item" id="infoDestinationCountryName"></li>
+                    <li class="list-group-item" id="infoDestinationIata"></li>
+                    <li class="list-group-item" id="infoDestinationIcao"></li>
+                    <li class="list-group-item" id="infoDestinationLatitude"></li>
+                    <li class="list-group-item" id="infoDestinationLongitude"></li>
+                </ul>
+                <hr>
+                <ul class="list-group">
+                    <li class="list-group-item active">Aircraft</li>
+                    <li class="list-group-item" id="infoAircraftId"></li>
+                    <li class="list-group-item" id="infoAircraftName"></li>
+                    <li class="list-group-item" id="infoAircraftSpeed"></li>
+                    <li class="list-group-item" id="infoAircraftFuelCapacity"></li>
+                    <li class="list-group-item" id="infoAircraftFuelConsumption"></li>
+                    <li class="list-group-item" id="infoAircraftTakeOffEffort"></li>
+                </ul>
+                <hr />
+
+                <ul class="list-group">
+                    <li class="list-group-item active">Flight details</li>
+                    <li class="list-group-item" id="infoFlightUpdateDate"></li>
+                    <li class="list-group-item" id="infoFlightDistance"></li>
+                    <li class="list-group-item" id="infoNeededFuel"></li>
+                </ul>
+                <div class="alert alert-danger" role="alert" id="alertMessage">
+                    This flight can not be provided by this aircraft! : insufusant fuel capacity
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        var tableFlight = $('#flight').DataTable({
+            "ajax": {
+                "url": '@Url.Action("GetAllFlightsDetails", "Flight")',
+                "contentType": "application/json; charset=utf-8",
+                "type": "GET",
+                "dataSrc": function (response) {
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code);
+                    }
+                    if (!response.data) {
+                        response.data = [];
+                    }
+                    return response.data;
+                }
+            },
+            "columns": [
+                { "data": "flight.id" },
+                { "data": "flight.airportDeparture.countryName" },
+                { "data": "flight.airportDestination.countryName" },
+                { "data": "flight.aircraft.name" },
+                { "data": "flightPlan.distance" },
+                { "data": "flightPlan.neededFuel" },
+                { "data": "flight.updateDate" }
+            ]
+            ,
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                {
+                "targets": 7,
+                    "data": null,
+                    "searchable": false,
+                    "orderable": false,
+                    "defaultContent": '<div class="btn-group" role="group">' +
+                        '<button type="button" class="btn btn-secondary flight-info" data-toggle="modal" data-target="#InfoModal"><span class="glyphicon glyphicon-search"></span></button>' +
+                        '<button type="button" class="btn btn-info flight-update" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-pencil"></span></button>' +                        
+                        
+                        '<button type="button" class="btn btn-danger airport-delete" data-toggle="modal" data-target="#DeleteModal"><span class="glyphicon glyphicon-trash"></span></button>' +
+                        '</div>'
+
+                }
+            ]
+        });
+
+        var tableAirportDestinationCreate = $('#airportDestinationCreate').DataTable({
+            scrollY: 200,
+            scrollCollapse: true,
+            paging: false,
+            "columns": [
+                { "data": "id" },
+                { "data": "countryName" },
+                { "data": "name" }
+            ]
+            ,
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                }]
+        });
+
+        var tableAirportDestinationUpdate = $('#airportDestinationUpdate').DataTable({
+            scrollY: 200,
+            scrollCollapse: true,
+            paging: false,
+            "columns": [
+                { "data": "id" },
+                { "data": "countryName" },
+                { "data": "name" }
+            ]
+            ,
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                }]
+        });
+
+        var tableAirportDepartureUpdate = $('#airportDepartureUpdate').DataTable({
+            scrollY: 200,
+            scrollCollapse: true,
+            paging: false,
+            "columns": [
+                { "data": "id" },
+                { "data": "countryName" },
+                { "data": "name" }
+            ]
+            ,
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                }]
+        });
+
+        var tableAirportDepartureCreate = $('#airportDepartureCreate').DataTable({
+            "ajax": {
+                "url": '@Url.Action("GetAllAirport", "Airport")',
+                "contentType": "application/json; charset=utf-8",
+                "type": "GET",
+                "dataSrc": function (response) {
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code);
+                    }
+                    if (!response.data) {
+                        response.data = [];
+                    }
+
+                    tableAirportDestinationCreate.rows.add(response.data).draw();
+                    tableAirportDepartureUpdate.rows.add(response.data).draw();
+                    tableAirportDestinationUpdate.rows.add(response.data).draw();
+                    return response.data;
+                }
+            },
+            scrollY: 200,
+            scrollCollapse: true,
+            paging: false,
+            "columns": [
+                { "data": "id" },
+                { "data": "countryName" },
+                { "data": "name" }
+            ]
+            ,
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                }]
+        });
+
+        var tableAircraftUpdate = $('#aircraftUpdate').DataTable({
+            scrollY: 200,
+            scrollCollapse: true,
+            paging: false,
+            "columns": [
+                {
+                    "data": "id"
+                },
+                { "data": "name" },
+                { "data": "speed" }
+            ]
+            ,
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                }]
+        });
+
+        var tableAircraftCreate = $('#aircraftCreate').DataTable({
+            "ajax": {
+                "url": '@Url.Action("GetAllAircraft", "Aircraft")',
+                "contentType": "application/json; charset=utf-8",
+                "type": "GET",
+                "dataSrc": function (response) {
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code);
+                    }
+                    if (!response.data) {
+                        response.data = [];
+                    }
+                    tableAircraftUpdate.rows.add(response.data).draw();
+                    return response.data;
+                }
+            },
+            scrollY: 200,
+            scrollCollapse: true,
+            paging: false,
+            "columns": [
+                {
+                    "data": "id"
+                },
+                { "data": "name" },
+                { "data": "speed" }
+            ]
+            ,
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                }]
+        });
+
+        
+        $('#airportDepartureCreate tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                tableAirportDepartureCreate.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#airportDestinationCreate tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                tableAirportDestinationCreate.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#aircraftCreate tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                tableAircraftCreate.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#airportDepartureUpdate tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                tableAirportDepartureUpdate.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#airportDestinationUpdate tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                tableAirportDestinationUpdate.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#aircraftUpdate tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                tableAircraftUpdate.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        $('#DeleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var recipient = button.data('whatever')
+            var modal = $(this);
+
+            var data = tableFlight.row($(event.relatedTarget).parents('tr')).data();
+
+            modal.find('#deleteId').val(data.flight.id);
+            modal.find('#deleteIdLabel').text('Flight Id: ' + data.flight.id);
+
+        });
+
+        $('#deleteConfirm').click(function () {
+
+            var request = $('#deleteId').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DeleteFlight", "Flight")',
+
+                async: false,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(request),
+                success: function (response) {
+
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
+                    } else {
+                        $('#flight').DataTable().ajax.reload();
+                        $('#DeleteModal').modal('hide');
+                    }
+                }
+            });
+        });
+
+        $('#CreateModal').on('show.bs.modal', function (event) {
+
+            tableAirportDepartureCreate.row('.selected').nodes().to$().removeClass('selected');
+            tableAirportDestinationCreate.row('.selected').nodes().to$().removeClass('selected');
+            tableAircraftCreate.row('.selected').nodes().to$().removeClass('selected');
+        });
+
+        $('#createConfirm').click(function () {
+
+            var depart = tableAirportDepartureCreate.row('.selected').data();
+            var destination = tableAirportDestinationCreate.row('.selected').data();
+            var aircraft = tableAircraftCreate.row('.selected').data();
+
+            if (!depart || !destination || !aircraft) {
+                alert('You should select departure and destination airport and aircraft');
+                return;
+            }
+
+            var request = {
+                airportDeparture: { id: depart.id },
+                airportDestination: { id: destination.id },
+                aircraft: { id: aircraft.id }
+            };
+            
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CreateFlight", "Flight")',
+                async: false,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(request),
+                success: function (response) {
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
+                    } else {
+                        $('#flight').DataTable().ajax.reload();
+                        $('#CreateModal').modal('hide');
+                    }
+                }
+            });
+        });
+
+        $('#UpdateModal').on('show.bs.modal', function (event) {
+
+            tableAirportDepartureUpdate.row('.selected').nodes().to$().removeClass('selected');
+            tableAirportDestinationUpdate.row('.selected').nodes().to$().removeClass('selected');
+            tableAircraftUpdate.row('.selected').nodes().to$().removeClass('selected');
+
+            var modal = $(this);
+
+            var data = tableFlight.row($(event.relatedTarget).parents('tr')).data();
+
+            modal.find('#updateIdLabel').text('Flight Id: ' + data.flight.id);
+            modal.find('#updateId').val(data.flight.id);
+            
+            var departureId = tableAirportDepartureUpdate.rows().eq(0).filter(function (rowIdx) {
+                return tableAirportDepartureUpdate.cell(rowIdx, 0).data() === data.flight.airportDeparture.id ? true : false;
+            });
+
+            tableAirportDepartureUpdate.rows(departureId).nodes().to$().addClass('selected');
+
+            var destinationId = tableAirportDestinationUpdate.rows().eq(0).filter(function (rowIdx) {
+                return tableAirportDestinationUpdate.cell(rowIdx, 0).data() === data.flight.airportDestination.id ? true : false;
+            });
+
+            tableAirportDestinationUpdate.rows(destinationId).nodes().to$().addClass('selected');
+
+            var aircraftId = tableAircraftUpdate.rows().eq(0).filter(function (rowIdx) {
+                return tableAircraftUpdate.cell(rowIdx, 0).data() === data.flight.aircraft.id ? true : false;
+            });
+
+            tableAircraftUpdate.rows(aircraftId).nodes().to$().addClass('selected');
+        });
+
+        $('#updateConfirm').click(function () {
+
+            var depart = tableAirportDepartureUpdate.row('.selected').data();
+            var destination = tableAirportDestinationUpdate.row('.selected').data();
+            var aircraft = tableAircraftUpdate.row('.selected').data();
+
+            if (!depart || !destination || !aircraft) {
+                alert('You should select departure and destination airport and aircraft');
+                return;
+            }
+
+            var request = {
+                id: parseInt($('#updateId').val()),
+                airportDeparture: { id: depart.id },
+                airportDestination: { id: destination.id },
+                aircraft: { id: aircraft.id }
+            };
+                        
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateFlight", "Flight")',
+                async: false,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(request),
+                success: function (response) {
+                    if (response.anomaly) {
+                        alert('an exception has been occured. Code : ' + response.anomaly.code + 'message : ' + response.anomaly.message);
+                    } else {
+                        $('#flight').DataTable().ajax.reload();
+                        $('#UpdateModal').modal('hide');
+                    }
+                }
+            });
+        });
+
+        $('#InfoModal').on('show.bs.modal', function (event) {
+
+            var data = tableFlight.row($(event.relatedTarget).parents('tr')).data();
+
+            var modal = $(this);
+
+            modal.find('#updateIdLabel').text('Airport Id: ' + data.id);
+
+            modal.find('#infoDepartureId').text('Id: '+ data.flight.airportDeparture.id);
+            modal.find('#infoDepartureName').text('Name: ' +data.flight.airportDeparture.name);
+            modal.find('#infoDepartureCity').text('City: ' +data.flight.airportDeparture.city);
+            modal.find('#infoDepartureCountryName').text('Country Name' +data.flight.airportDeparture.countryName);
+            modal.find('#infoDepartureIata').text('IATA: ' +data.flight.airportDeparture.iata);
+            modal.find('#infoDepartureIcao').text('ICAO: ' +data.flight.airportDeparture.icao);
+            modal.find('#infoDepartureLatitude').text('Latitude: ' +data.flight.airportDeparture.latitude);
+            modal.find('#infoDepartureLongitude').text('Longitude: ' + data.flight.airportDeparture.longitude);
+
+            modal.find('#infoDestinationId').text('Id: ' + data.flight.airportDeparture.id);
+            modal.find('#infoDestinationName').text('Name: ' + data.flight.airportDeparture.name);
+            modal.find('#infoDestinationCity').text('City: ' + data.flight.airportDeparture.city);
+            modal.find('#infoDestinationCountryName').text('Country Name' + data.flight.airportDeparture.countryName);
+            modal.find('#infoDestinationIata').text('IATA: ' + data.flight.airportDeparture.iata);
+            modal.find('#infoDestinationIcao').text('ICAO: ' + data.flight.airportDeparture.icao);
+            modal.find('#infoDestinationLatitude').text('Latitude: ' + data.flight.airportDeparture.latitude);
+            modal.find('#infoDestinationLongitude').text('Longitude: ' + data.flight.airportDeparture.longitude);
+
+            modal.find('#infoAircraftId').text('Id:' +data.flight.aircraft.id);
+            modal.find('#infoAircraftName').text('Name: ' +data.flight.aircraft.name);
+            modal.find('#infoAircraftSpeed').text('Speed: ' +data.flight.aircraft.speed);
+            modal.find('#infoAircraftFuelCapacity').text('Fuel Capacity' +data.flight.aircraft.fuelCapacity);
+            modal.find('#infoAircraftFuelConsumption').text('Fuel Consumption: ' +data.flight.aircraft.fuelConsumption);
+            modal.find('#infoAircraftTakeOffEffort').text('TakeOffEffort: ' +data.flight.aircraft.takeOffEffort);
+
+            modal.find('#infoFlightUpdateDate').text('Update Date' +data.flight.updateDate);
+            modal.find('#infoFlightDistance').text('Distance: ' +data.flightPlan.distance);
+            modal.find('#infoNeededFuel').text('Needed Fuel' + data.flightPlan.neededFuel);
+
+            if (data.flightPlan.neededFuel > data.flight.aircraft.fuelCapacity) {
+                $("#alertMessage").show();
+            } else {
+                $("#alertMessage").hide();
+            }
+            
+        });
+
+    });
+</script>
+
+

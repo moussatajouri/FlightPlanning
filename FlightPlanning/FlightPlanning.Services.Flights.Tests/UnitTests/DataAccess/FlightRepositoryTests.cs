@@ -259,8 +259,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
                     var exception = Assert.Throws<FlightPlanningFunctionalException>(() => flightRepositoy.InsertFlight(flight));
 
-                    Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
-                    Assert.Contains("FOREIGN KEY constraint failed", exception.Message);
+                    Assert.Equal(ExceptionCodes.FlightNullArgumentsCode, exception.Code);
+                    Assert.Contains(ExceptionCodes.FlightNullArgumentsMessage, exception.Message);
                     Assert.Empty(context.Flight);
                 }
             }
@@ -287,6 +287,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             {
                 AirportDepartureId = airportDepartureId,
                 AirportDestinationId = airportDestinationId,
+                AircraftId = 2
             };
 
             var exception = Assert.Throws<FlightPlanningFunctionalException>(() => flightRepositoy.InsertFlight(flight));
@@ -311,7 +312,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             var flightRepositoy = new FlightRepository(flightsContextMock.Object);
 
             var resultException = Assert.Throws<FlightPlanningTechnicalException>(
-                () => flightRepositoy.InsertFlight(new Flight { AirportDepartureId = 1, AirportDestinationId = 2 }));
+                () => flightRepositoy.InsertFlight(new Flight { AirportDepartureId = 1, AirportDestinationId = 2 , AircraftId = 2}));
 
             Assert.Equal(ExceptionCodes.NoChangeMessage, resultException.Message);
             Assert.Equal(ExceptionCodes.NoChangeCode, resultException.Code);
@@ -341,7 +342,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 }
 
 
-                int aircraftId = 0, airportDepartureId = 0, airportDestinationId = 0;
+                int aircraftId = -1, airportDepartureId = -1, airportDestinationId = -1;
 
                 using (var context = new FlightsDbContext(options))
                 {
@@ -435,8 +436,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 var flight = new Flight
                 {
                     AirportDepartureId = airportDepartureId,
-                    AirportDestinationId = airportDestinationId,
-                    AircraftId = aircraftId
+                    AirportDestinationId = airportDestinationId ,
+                    AircraftId = aircraftId 
                 };
 
                 flightRepositoy.InsertFlight(flight);
@@ -535,8 +536,8 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
 
                     var exception = Assert.Throws<FlightPlanningFunctionalException>(() => flightRepositoy.UpdateFlight(flight));
 
-                    Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
-                    Assert.Contains("FOREIGN KEY constraint failed", exception.Message);
+                    Assert.Equal(ExceptionCodes.FlightNullArgumentsCode, exception.Code);
+                    Assert.Contains(ExceptionCodes.FlightNullArgumentsMessage, exception.Message);
                     Assert.Empty(context.Flight);
                 }
             }
@@ -563,6 +564,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             {
                 AirportDepartureId = airportDepartureId,
                 AirportDestinationId = airportDestinationId,
+                AircraftId = 5
             };
 
             var exception = Assert.Throws<FlightPlanningFunctionalException>(() => flightRepositoy.UpdateFlight(flight));
@@ -587,7 +589,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
             var flightRepositoy = new FlightRepository(flightsContextMock.Object);
 
             var resultException = Assert.Throws<FlightPlanningTechnicalException>(
-                () => flightRepositoy.UpdateFlight(new Flight { AirportDepartureId = 1, AirportDestinationId = 2 }));
+                () => flightRepositoy.UpdateFlight(new Flight { AirportDepartureId = 1, AirportDestinationId = 2 , AircraftId = 3}));
 
             Assert.Equal(ExceptionCodes.NoChangeMessage, resultException.Message);
             Assert.Equal(ExceptionCodes.NoChangeCode, resultException.Code);
@@ -617,7 +619,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.DataAccess
                 }
 
 
-                int aircraftId = 0, airportDepartureId = 0, airportDestinationId = 0;
+                int aircraftId = -1, airportDepartureId = -1, airportDestinationId = -1;
 
                 using (var context = new FlightsDbContext(options))
                 {

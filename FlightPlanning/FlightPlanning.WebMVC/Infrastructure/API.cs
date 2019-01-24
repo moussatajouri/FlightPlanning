@@ -18,5 +18,14 @@ namespace FlightPlanning.WebMVC.Infrastructure
             public static string GetAllAircraft(string baseUri) => $"{baseUri}/aircraft/all";
             public static string CrudAircraft(string baseUri) => $"{baseUri}/aircraft";
         }
+
+        public static class Flight
+        {
+            public static string GetAllFlight(string baseUri) => $"{baseUri}/flight/all";
+
+            public static string GetAllFlightsDetails(string baseUri) => $"{baseUri}/flight/detail/all";
+
+            public static string CrudFlight(string baseUri) => $"{baseUri}/flight";
+        }
     }
 }

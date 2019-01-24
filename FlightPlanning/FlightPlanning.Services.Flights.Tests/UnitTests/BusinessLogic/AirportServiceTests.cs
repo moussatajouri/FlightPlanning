@@ -2,6 +2,7 @@
 using FlightPlanning.Services.Flights.DataAccess;
 using FlightPlanning.Services.Flights.Dto;
 using FlightPlanning.Services.Flights.Models;
+using FlightPlanning.Services.Flights.Transverse.Exception;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -130,6 +131,48 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
             airportRepositoryMock.Verify(m => m.InsertAirport(It.IsAny<Airport>()), Times.Never);
         }
 
+        [Theory]
+        [InlineData(null, "country", "aaa", "aaaa", 50,20)]
+        [InlineData("", "country", "aaa", "aaaa", 50, 20)]
+        [InlineData("name", null, "aaa", "aaaa", 50, 20)]
+        [InlineData("name", "", "aaa", "aaaa", 50, 20)]
+        [InlineData("name", "country", "aaaaaa", "aaaa", 50, 20)]
+        [InlineData("name", "country", "aa", "aaaa", 50, 20)]
+        [InlineData("name", "country", "aaa", "aaaaaaa", 50, 20)]
+        [InlineData("name", "country", "aaa", "aaa", 50, 20)]
+        [InlineData("name", "country", "aaa", "aaaa", null, 20)]
+        [InlineData("name", "country", "aaa", "aaaa", -91, 20)]
+        [InlineData("name", "country", "aaa", "aaaa", 91, 20)]
+        [InlineData("name", "country", "aaa", "aaa", 50, -181)]
+        [InlineData("name", "country", "aaa", "aaa", 50, 181)]
+        [InlineData("name", "country", "aaa", "aaa", 50, null)]
+        public void Should_InsertAirport_ThrowsException_When_AirportsHasInvalidData(string name, string countryName, string iata, string icao, double? latitude, double? longitude )
+        {
+
+            var airport = new AirportDto
+            {
+                Name= name,
+                CountryName= countryName,
+                Iata= iata,
+                Icao= icao,
+                Latitude= latitude,
+                Longitude= longitude
+            };
+
+            var airportRepositoryMock = new Mock<IAirportRepository>();
+
+            airportRepositoryMock.Setup(m => m.InsertAirport(It.IsAny<Airport>())).Verifiable();
+
+            var airportService = new AirportService(airportRepositoryMock.Object);
+
+            var exception = Assert.Throws<FlightPlanningFunctionalException>(() => airportService.InsertAirport(airport));
+
+            Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
+            Assert.Equal(ExceptionCodes.InvalidAirportMessage, exception.Message);
+
+            airportRepositoryMock.Verify(m => m.InsertAirport(It.IsAny<Airport>()), Times.Never);
+        }
+
         [Fact]
         public void Should_InsertAirport_Call_InsertAirport_When_AirportsIsNotNull()
         {
@@ -139,7 +182,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
 
             var airportService = new AirportService(airportRepositoryMock.Object);
 
-            airportService.InsertAirport(new AirportDto());
+            airportService.InsertAirport(new AirportDto { Name = "name", CountryName = "country" });
 
             airportRepositoryMock.Verify(m => m.InsertAirport(It.IsAny<Airport>()), Times.Once);
         }
@@ -158,6 +201,46 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
             airportRepositoryMock.Verify(m => m.UpdateAirport(It.IsAny<Airport>()), Times.Never);
         }
 
+        [Theory]
+        [InlineData(null, "country", "aaa", "aaaa", 50, 20)]
+        [InlineData("", "country", "aaa", "aaaa", 50, 20)]
+        [InlineData("name", null, "aaa", "aaaa", 50, 20)]
+        [InlineData("name", "", "aaa", "aaaa", 50, 20)]
+        [InlineData("name", "country", "aaaaaa", "aaaa", 50, 20)]
+        [InlineData("name", "country", "aa", "aaaa", 50, 20)]
+        [InlineData("name", "country", "aaa", "aaaaaaa", 50, 20)]
+        [InlineData("name", "country", "aaa", "aaa", 50, 20)]
+        [InlineData("name", "country", "aaa", "aaaa", 181, 20)]
+        [InlineData("name", "country", "aaa", "aaaa", -181, 20)]
+        [InlineData("name", "country", "aaa", "aaa", 50, -91)]
+        [InlineData("name", "country", "aaa", "aaa", 50, 91)]
+        public void Should_UpdateAirport_ThrowsException_When_AirportsHasInvalidData(string name, string countryName, string iata, string icao, double latitude, double longitude)
+        {
+
+            var airport = new AirportDto
+            {
+                Name = name,
+                CountryName = countryName,
+                Iata = iata,
+                Icao = icao,
+                Latitude = latitude,
+                Longitude = longitude
+            };
+
+            var airportRepositoryMock = new Mock<IAirportRepository>();
+
+            airportRepositoryMock.Setup(m => m.UpdateAirport(It.IsAny<Airport>())).Verifiable();
+
+            var airportService = new AirportService(airportRepositoryMock.Object);
+
+            var exception = Assert.Throws<FlightPlanningFunctionalException>(() => airportService.UpdateAirport(airport));
+
+            Assert.Equal(ExceptionCodes.InvalidEntityCode, exception.Code);
+            Assert.Equal(ExceptionCodes.InvalidAirportMessage, exception.Message);
+
+            airportRepositoryMock.Verify(m => m.UpdateAirport(It.IsAny<Airport>()), Times.Never);
+        }
+
         [Fact]
         public void Should_UpdateAirport_Call_UpdateAirport_When_AirportsIsNotNull()
         {
@@ -167,7 +250,7 @@ namespace FlightPlanning.Services.Flights.Tests.UnitTests.BusinessLogic
 
             var airportService = new AirportService(airportRepositoryMock.Object);
 
-            airportService.UpdateAirport(new AirportDto());
+            airportService.UpdateAirport(new AirportDto { Name = "name", CountryName = "country" });
 
             airportRepositoryMock.Verify(m => m.UpdateAirport(It.IsAny<Airport>()), Times.Once);
         }

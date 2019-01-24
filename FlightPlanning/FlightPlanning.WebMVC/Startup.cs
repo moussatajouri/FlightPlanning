@@ -38,6 +38,7 @@ namespace FlightPlanning.WebMVC
 
             services.AddHttpClient<IAirportService, AirportService>();
             services.AddHttpClient<IAircraftService, AircraftService>();
+            services.AddHttpClient<IFlightService, FlightService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

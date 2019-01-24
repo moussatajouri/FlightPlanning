@@ -36,9 +36,9 @@ namespace FlightPlanning.Services.Flights.Transverse.Mapper
             return new Flight
             {
                 Id = flightDto.Id,
-                Aircraft = AircraftMapper.MapFromDto(flightDto.Aircraft),
-                AirportDeparture = AirportMapper.MapFromDto(flightDto.AirportDeparture),
-                AirportDestination = AirportMapper.MapFromDto(flightDto.AirportDestination),
+                AircraftId = flightDto.Aircraft != null ? flightDto.Aircraft.Id : 0,
+                AirportDepartureId = flightDto.AirportDeparture != null ? flightDto.AirportDeparture.Id : 0,
+                AirportDestinationId = flightDto.AirportDestination != null ? flightDto.AirportDestination.Id : 0,
                 UpdateDate = flightDto.UpdateDate
             };
         }

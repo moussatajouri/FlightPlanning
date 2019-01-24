@@ -39,6 +39,11 @@ namespace FlightPlanning.Services.Flights.DataAccess
                 throw new ArgumentNullException(nameof(flight));
             }
 
+            if (flight.AirportDepartureId == 0 || flight.AirportDestinationId == 0 || flight.AircraftId == 0)
+            {
+                throw new FlightPlanningFunctionalException(ExceptionCodes.FlightNullArgumentsCode, ExceptionCodes.FlightNullArgumentsMessage);
+            }
+
             if (flight.AirportDepartureId == flight.AirportDestinationId)
             {
                 throw new FlightPlanningFunctionalException(ExceptionCodes.SameDepartureAndDestinationAirportCode,
@@ -61,6 +66,12 @@ namespace FlightPlanning.Services.Flights.DataAccess
             {
                 throw new ArgumentNullException(nameof(flight));
             }
+
+            if (flight.AirportDepartureId == 0 || flight.AirportDestinationId == 0 || flight.AircraftId == 0)
+            {
+                throw new FlightPlanningFunctionalException(ExceptionCodes.FlightNullArgumentsCode, ExceptionCodes.FlightNullArgumentsMessage);
+            }
+
             if (flight.AirportDepartureId == flight.AirportDestinationId)
             {
                 throw new FlightPlanningFunctionalException(ExceptionCodes.SameDepartureAndDestinationAirportCode,
