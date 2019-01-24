@@ -1,5 +1,5 @@
 ﻿
-<script type="text/javascript" src="~/js/jquery-3.3.1.js"></script>
+
 <script type="text/javascript" src="~/js/jquery.dataTables.min.js"></script>
 
 <div class="row">
@@ -13,7 +13,7 @@
 
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-12">
+                <div class="table-responsive">
 
                     <table id="flight" class="display" style="width:100%">
                         <thead>
@@ -56,7 +56,7 @@
 
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="table-responsive">
                                             <table id="airportDepartureCreate" class="display" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -80,7 +80,7 @@
 
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="table-responsive">
                                             <table id="airportDestinationCreate" class="display table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="table-responsive">
                                             <table id="aircraftCreate" class="display table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -161,7 +161,7 @@
                                 <div class="panel-body">
 
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="table-responsive">
                                             <table id="airportDepartureUpdate" class="display" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -185,7 +185,7 @@
 
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="table-responsive">
                                             <table id="airportDestinationUpdate" class="display table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -208,7 +208,7 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="table-responsive">
                                             <table id="aircraftUpdate" class="display table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
@@ -368,7 +368,6 @@
                     "defaultContent": '<div class="btn-group" role="group">' +
                         '<button type="button" class="btn btn-secondary flight-info" data-toggle="modal" data-target="#InfoModal"><span class="glyphicon glyphicon-search"></span></button>' +
                         '<button type="button" class="btn btn-info flight-update" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-pencil"></span></button>' +                        
-                        
                         '<button type="button" class="btn btn-danger airport-delete" data-toggle="modal" data-target="#DeleteModal"><span class="glyphicon glyphicon-trash"></span></button>' +
                         '</div>'
 
@@ -763,7 +762,7 @@
 
             modal.find('#infoFlightUpdateDate').text('Update Date' +data.flight.updateDate);
             modal.find('#infoFlightDistance').text('Distance: ' +data.flightPlan.distance);
-            modal.find('#infoNeededFuel').text('Needed Fuel' + data.flightPlan.neededFuel);
+            modal.find('#infoNeededFuel').text('Needed Fuel: ' + data.flightPlan.neededFuel);
 
             if (data.flightPlan.neededFuel > data.flight.aircraft.fuelCapacity) {
                 $("#alertMessage").show();

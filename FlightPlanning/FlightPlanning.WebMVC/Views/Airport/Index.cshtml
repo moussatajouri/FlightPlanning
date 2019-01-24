@@ -1,5 +1,5 @@
 ﻿
-<script type="text/javascript" src="~/js/jquery-3.3.1.js"></script>
+
 <script type="text/javascript" src="~/js/jquery.dataTables.min.js"></script>
 
 <div class="row">
@@ -13,8 +13,7 @@
 
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-12">
-
+                <div class="table-responsive">
                     <table id="airport" class="display" style="width:100%">
                         <thead>
                             <tr>
@@ -127,7 +126,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                
+
                 <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Name* :</label>
                     <input type="text" class="form-control" id="createName">
@@ -212,9 +211,10 @@
                     "data": null,
                     "searchable": false,
                     "orderable": false,
-                    "defaultContent": '<div><button type="button" class="btn btn-info airport-update" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-pencil"></span></button>' +
-                        '<button type="button" class="btn btn-danger airport-delete" data-toggle="modal" data-target="#DeleteModal"><span class="glyphicon glyphicon-trash"></span></button></div>'
-
+                    "defaultContent": '<div class="btn-group" role="group">' +
+                        '<button type="button" class="btn btn-info airport-update" data-toggle="modal" data-target="#UpdateModal"><span class="glyphicon glyphicon-pencil"></span></button>' +
+                        '<button type="button" class="btn btn-danger airport-delete" data-toggle="modal" data-target="#DeleteModal"><span class="glyphicon glyphicon-trash"></span></button>'+
+                        '</div>'
             }]
         });
 
@@ -350,6 +350,9 @@
                 }
             });
         });
+
+
+
     });
 </script>
 
